@@ -262,67 +262,6 @@
             flex-grow: 1;
         }
 
-        /* Profile Widget (Top Right) */
-        .profile-widget {
-            position: fixed;
-            top: 1.5rem;
-            right: 5rem; /* Next to theme toggle */
-            z-index: 1000;
-            display: none; /* Hidden by default */
-            align-items: center;
-            gap: 15px;
-            padding: 8px 16px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            animation: fadeIn 0.4s ease-out;
-        }
-        
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-        
-        .profile-name {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-        }
-        
-        .profile-course {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .profile-course span {
-            color: var(--success-color);
-            font-weight: 700;
-        }
-        
-        .logout-btn {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error-color);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            font-size: 1.1rem;
-        }
-        
-        .logout-btn:hover {
-            background: var(--error-color);
-            color: white;
-            transform: scale(1.1);
-        }
-
         /* Custom Toast Notification */
         .toast {
             position: fixed;
@@ -348,11 +287,57 @@
             opacity: 1;
         }
 
+        /* Dashboard Profile Banner */
+        .profile-banner {
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: rgba(96, 165, 250, 0.15);
+            color: var(--link-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .profile-banner h2 { font-size: 1.8rem; margin: 0; color: var(--text-primary); }
+        .profile-banner p { color: var(--text-secondary); margin: 0; font-size: 1rem; }
+        .profile-banner span { font-weight: 700; color: var(--success-color); }
+        
+        .logout-dash-btn {
+            margin-top: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .logout-dash-btn:hover {
+            background: var(--error-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .course-grid { grid-template-columns: 1fr; }
-            .profile-widget { top: 1rem; right: 4rem; padding: 6px 12px; gap: 10px;}
-            .profile-name { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -361,17 +346,6 @@
     <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme">
         <i class="fas fa-moon"></i>
     </button>
-
-    <!-- Top Right Profile Widget -->
-    <div class="profile-widget glass" id="profileWidget">
-        <div class="profile-info">
-            <div class="profile-name" id="profileName">Student Name</div>
-            <div class="profile-course">Enrolled: <span id="profileCourse">Course</span></div>
-        </div>
-        <button onclick="logout()" class="logout-btn" title="Logout">
-            <i class="fa-solid fa-power-off"></i>
-        </button>
-    </div>
 
     <!-- Toast Notification for Buys -->
     <div id="toast" class="toast">
@@ -480,9 +454,24 @@
 
         <!-- ================= DASHBOARD VIEW (LOGGED IN) ================= -->
         <div id="dashboardView" class="view-section">
+            
+            <!-- Student Profile Section -->
+            <div class="glass profile-banner">
+                <div class="profile-avatar">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+                <h2 id="profileNameDisplay">Student Name</h2>
+                <p>Roll No: <span id="profileRollDisplay" style="color: var(--text-primary);">N/A</span></p>
+                <p>Enrolled Course: <span id="profileCourseDisplay">N/A</span></p>
+                
+                <button onclick="logout()" class="logout-dash-btn">
+                    Logout <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+
             <div class="header">
                 <h1>Premium Programs</h1>
-                <p id="welcomeMessage">Welcome back, level up your skills today.</p>
+                <p>Level up your skills today.</p>
             </div>
             
             <div class="course-grid">
@@ -568,16 +557,14 @@
         }
 
         function showLoggedInState(user) {
-            document.getElementById('profileName').innerText = user.name || user.email.split('@')[0];
-            document.getElementById('profileCourse').innerText = user.course || 'N/A';
-            document.getElementById('profileWidget').style.display = 'flex';
-            document.getElementById('welcomeMessage').innerText = `Welcome back ${user.name || user.email.split('@')[0]}! Ready to level up?`;
+            document.getElementById('profileNameDisplay').innerText = user.name || user.email.split('@')[0];
+            document.getElementById('profileRollDisplay').innerText = user.roll || 'N/A';
+            document.getElementById('profileCourseDisplay').innerText = user.course || 'N/A';
             switchView('dashboardView');
         }
 
         function logout() {
             localStorage.removeItem('courseAppUser');
-            document.getElementById('profileWidget').style.display = 'none';
             document.getElementById('loginEmail').value = '';
             switchView('loginView');
         }
@@ -629,6 +616,7 @@
                     const userObj = {
                         email: email,
                         name: data.name,     // Expecting name from backend
+                        roll: data.roll,     // Expecting roll from backend
                         course: data.course  // Expecting course from backend
                     };
                     localStorage.setItem('courseAppUser', JSON.stringify(userObj));
