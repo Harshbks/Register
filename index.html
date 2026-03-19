@@ -59,6 +59,8 @@
             display: flex;
             justify-content: center;
             align-items: center; 
+            position: relative;
+            padding-bottom: 4rem; /* Extra padding for footer */
         }
 
         @keyframes gradientShift {
@@ -365,6 +367,19 @@
             opacity: 1;
         }
 
+        /* Global Footer */
+        .global-footer {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            z-index: 10;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .course-grid { grid-template-columns: 1fr; }
@@ -545,6 +560,11 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- Added Footer -->
+    <div class="global-footer">
+        made by 😍
     </div>
 
     <script>
