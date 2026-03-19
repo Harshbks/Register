@@ -113,11 +113,19 @@
         .header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .header p { font-size: 1rem; color: var(--text-secondary); }
 
-        /* Top Right Fixed Icons */
+        /* Top Right Fixed Icons Container */
+        .top-right-actions {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
         .theme-toggle, .profile-toggle {
-            position: fixed; top: 1.5rem; 
             width: 48px; height: 48px; border-radius: 50%;
-            cursor: pointer; z-index: 1000;
+            cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             font-size: 1.4rem;
             background: var(--glass-bg);
@@ -127,8 +135,7 @@
             transition: transform 0.2s;
         }
         
-        .theme-toggle { right: 5.5rem; } /* Pushed to the left of the profile icon */
-        .profile-toggle { right: 1.5rem; display: none; } /* Hidden until logged in */
+        .profile-toggle { display: none; } /* Hidden until logged in */
 
         .theme-toggle:hover, .profile-toggle:hover { transform: scale(1.1); }
 
@@ -361,18 +368,23 @@
         /* Responsive */
         @media (max-width: 768px) {
             .course-grid { grid-template-columns: 1fr; }
+            .top-right-actions { top: 1rem; right: 1rem; gap: 0.5rem; }
+            .profile-dropdown { top: 4.5rem; right: 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme" title="Toggle Theme">
-        <i class="fas fa-moon"></i>
-    </button>
+    <!-- Container for dynamic top-right icons -->
+    <div class="top-right-actions">
+        <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
 
-    <button class="profile-toggle" id="profileToggleBtn" aria-label="Toggle Profile" title="View Profile">
-        <i class="fa-solid fa-user"></i>
-    </button>
+        <button class="profile-toggle" id="profileToggleBtn" aria-label="Toggle Profile" title="View Profile">
+            <i class="fa-solid fa-user"></i>
+        </button>
+    </div>
 
     <!-- Dropdown for Student Profile -->
     <div class="profile-dropdown glass" id="profileDropdown">
