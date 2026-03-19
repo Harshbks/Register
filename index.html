@@ -308,7 +308,7 @@
                 <form id="loginForm">
                     <div class="input-box">
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="loginEmail" required autocomplete="email" placeholder=" ">
+                        <input type="email" id="loginEmail" required autocomplete="email" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
                         <label for="loginEmail">Registered Student Mail ID</label>
                     </div>
                     
@@ -345,7 +345,7 @@
 
                     <div class="input-box">
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" ">
+                        <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
                         <label for="studentMail">Student Mail ID</label>
                     </div>
                     
@@ -527,9 +527,8 @@
             submitBtn.innerHTML = 'Enrolling... <i class="fa-solid fa-spinner fa-spin"></i>';
             submitBtn.disabled = true;
             
-            // Note: For sign up, we can still use no-cors if the Apps Script isn't updated, 
-            // but standard form submission is recommended.
-            fetch(scriptURL, { method: 'POST', body: new FormData(signupForm) })
+            // Fixed: Added mode: 'no-cors' so the browser doesn't block the POST submission.
+            fetch(scriptURL, { method: 'POST', body: new FormData(signupForm), mode: 'no-cors' })
             .then(response => {
                 submitBtn.innerHTML = 'Registered! <i class="fa-solid fa-check-circle"></i>';
                 submitBtn.style.background = 'var(--success-color)';
