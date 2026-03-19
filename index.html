@@ -27,7 +27,6 @@
             --card-bg: rgba(255, 255, 255, 0.03);
             --select-bg: #1e293b;
             --link-color: #60a5fa;
-            --scrollbar-bg: rgba(255, 255, 255, 0.1);
         }
 
         [data-theme="light"] {
@@ -44,41 +43,26 @@
             --card-bg: rgba(255, 255, 255, 0.4);
             --select-bg: #ffffff;
             --link-color: #2563eb;
-            --scrollbar-bg: rgba(0, 0, 0, 0.2);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Lock the body to prevent entire page scrolling */
+        /* Full Screen & Safe Scroll Body */
+        html { scroll-behavior: smooth; }
+        
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             color: var(--text-primary);
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden; /* Prevents PC scroll */
-            position: relative;
-        }
-
-        /* Dedicated scroll wrapper for content */
-        .main-scroll-wrapper {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            overflow-y: auto;
-            overflow-x: hidden;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 6rem 1rem 4rem 1rem; /* Space for absolute icons and footer */
-            scroll-behavior: smooth;
+            padding: 0 1rem;
+            position: relative;
+            overflow-x: hidden;
         }
-
-        /* Custom Sleek Scrollbar */
-        .main-scroll-wrapper::-webkit-scrollbar { width: 6px; }
-        .main-scroll-wrapper::-webkit-scrollbar-track { background: transparent; }
-        .main-scroll-wrapper::-webkit-scrollbar-thumb { background: var(--scrollbar-bg); border-radius: 10px; }
-        .main-scroll-wrapper::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
 
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -96,13 +80,24 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
+        /* Spacers securely push the form to the center, avoiding top cut-offs! */
+        .spacer {
+            flex-grow: 1;
+            min-height: 6rem; /* Guarantees safe spacing below the top icons */
+            flex-shrink: 0;
+        }
+        .spacer.bottom {
+            min-height: 3rem; /* Bottom breathing room */
+        }
+
         .container {
             width: 100%;
             max-width: 550px;
-            margin: auto; /* Magically centers horizontally & vertically without top cut-off */
+            margin: 0 auto; /* Horizontal center only. Vertical uses spacers. */
             position: relative;
             z-index: 1;
             transition: max-width 0.5s ease;
+            flex-shrink: 0; /* Prevents form from compressing */
         }
 
         /* Expands the container specifically for the dashboard grid */
@@ -133,7 +128,7 @@
         .header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .header p { font-size: 1rem; color: var(--text-secondary); line-height: 1.5; }
 
-        /* Top Right Icons Container (Absolute to body, not fixed) */
+        /* Top Right Icons Container - Absolute to Document (Scrolls naturally) */
         .top-right-actions {
             position: absolute;
             top: 1.5rem;
@@ -319,7 +314,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            margin-top: 2.5rem; /* Increased space between header and cards */
+            margin-top: 2.5rem; /* Space between header and cards */
         }
 
         .course-card {
@@ -390,22 +385,16 @@
 
         /* Global Footer */
         .global-footer {
-            position: absolute;
-            bottom: 1rem;
-            left: 0;
-            width: 100%;
+            padding: 1.5rem 0;
             text-align: center;
             font-size: 0.95rem;
             color: var(--text-secondary);
             font-weight: 500;
-            z-index: 10;
+            flex-shrink: 0;
         }
 
         /* Responsive Mobile Adjustments */
         @media (max-width: 768px) {
-            .main-scroll-wrapper {
-                padding: 5rem 1rem 3rem 1rem; 
-            }
             .course-grid { grid-template-columns: 1fr; gap: 1.5rem; }
             .top-right-actions { top: 1rem; right: 1rem; gap: 0.5rem; }
             .profile-dropdown { top: 4.5rem; right: 1rem; padding: 1.25rem; width: 240px; }
@@ -421,7 +410,7 @@
 </head>
 <body>
 
-    <!-- Container for dynamic top-right icons (Absolute to body) -->
+    <!-- Container for dynamic top-right icons (Absolute to Document - Will scroll normally) -->
     <div class="top-right-actions">
         <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme" title="Toggle Theme">
             <i class="fas fa-moon"></i>
@@ -446,155 +435,158 @@
         </button>
     </div>
 
-    <!-- Toast Notification for Buys -->
+    <!-- Toast Notification for Buys (Fixed so it overlaps) -->
     <div id="toast" class="toast">
         <i class="fa-solid fa-circle-notch fa-spin"></i> <span id="toastMsg">Processing...</span>
     </div>
 
-    <!-- Scrollable wrapper for forms & dashboard content -->
-    <div class="main-scroll-wrapper" id="mainScroll">
-        <div class="container">
+    <!-- Top spacer to perfectly balance the container and prevent icon overlap -->
+    <div class="spacer"></div>
+
+    <div class="container" id="mainContainer">
+        
+        <!-- ================= LOGIN VIEW ================= -->
+        <div id="loginView" class="view-section active">
+            <div class="header">
+                <h1>Welcome Back</h1>
+                <p>Login to access your course dashboard.</p>
+            </div>
             
-            <!-- ================= LOGIN VIEW ================= -->
-            <div id="loginView" class="view-section active">
-                <div class="header">
-                    <h1>Welcome Back</h1>
-                    <p>Login to access your course dashboard.</p>
-                </div>
-                
-                <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
-                    <div id="loginAlert" class="alert-box"></div>
-                    <form id="loginForm">
-                        <div class="input-box">
-                            <i class="fa-solid fa-envelope"></i>
-                            <input type="email" id="loginEmail" required autocomplete="email" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
-                            <label for="loginEmail">Registered Student Mail ID</label>
-                        </div>
-                        
-                        <button type="submit" id="loginBtn">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
-                        
-                        <div class="form-footer">
-                            Don't have an account? <a onclick="switchView('signupView')">Sign Up</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- ================= SIGN UP VIEW ================= -->
-            <div id="signupView" class="view-section">
-                <div class="header">
-                    <h1>Course Enrollment</h1>
-                    <p>Fill out the details to enroll as a new student.</p>
-                </div>
-
-                <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
-                    <form id="enrollmentForm">
-                        
-                        <div class="input-box">
-                            <i class="fa-solid fa-user"></i>
-                            <input type="text" id="studentName" name="studentName" required autocomplete="off" placeholder=" ">
-                            <label for="studentName">Full Name</label>
-                        </div>
-
-                        <div class="input-box">
-                            <i class="fa-solid fa-id-card"></i>
-                            <input type="text" id="rollNumber" name="rollNumber" required autocomplete="off" placeholder=" ">
-                            <label for="rollNumber">Roll Number</label>
-                        </div>
-
-                        <div class="input-box">
-                            <i class="fa-solid fa-envelope"></i>
-                            <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
-                            <label for="studentMail">Student Mail ID</label>
-                        </div>
-                        
-                        <div class="input-box">
-                            <i class="fa-solid fa-phone"></i>
-                            <input type="tel" id="phoneNumber" name="phoneNumber" required autocomplete="off" placeholder=" ">
-                            <label for="phoneNumber">Phone Number</label>
-                        </div>
-
-                        <div class="input-box">
-                            <i class="fa-solid fa-building-columns"></i>
-                            <input type="text" id="branch" name="branch" required autocomplete="off" placeholder=" ">
-                            <label for="branch">Branch</label>
-                        </div>
-
-                        <div class="input-box">
-                            <i class="fa-solid fa-laptop-code"></i>
-                            <select id="course" name="course" required>
-                                <option value="" hidden></option> 
-                                <option value="DSA">DSA</option>
-                                <option value="Web Development">Web Development</option>
-                                <option value="AI & ML">AI & ML</option>
-                                <option value="DBMS">DBMS</option>
-                            </select>
-                            <label for="course">Course to Enroll</label>
-                        </div>
-
-                        <div class="input-box">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                            <select id="semester" name="semester" required>
-                                <option value="" hidden></option> 
-                                <option value="1st Semester">1st Semester</option>
-                                <option value="2nd Semester">2nd Semester</option>
-                                <option value="3rd Semester">3rd Semester</option>
-                                <option value="4th Semester">4th Semester</option>
-                            </select>
-                            <label for="semester">Current Semester</label>
-                        </div>
-
-                        <button type="submit" id="submitBtn">Submit Registration <i class="fa-solid fa-paper-plane"></i></button>
-
-                        <div class="form-footer">
-                            Already registered? <a onclick="switchView('loginView')">Login here</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- ================= DASHBOARD VIEW (LOGGED IN) ================= -->
-            <div id="dashboardView" class="view-section">
-                
-                <div class="header">
-                    <h1>Premium Programs</h1>
-                    <p id="welcomeMessage">Level up your skills today.</p>
-                </div>
-                
-                <div class="course-grid">
+            <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
+                <div id="loginAlert" class="alert-box"></div>
+                <form id="loginForm">
+                    <div class="input-box">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="loginEmail" required autocomplete="email" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
+                        <label for="loginEmail">Registered Student Mail ID</label>
+                    </div>
                     
-                    <!-- Course 1 -->
-                    <div class="glass course-card">
-                        <i class="fa-solid fa-user-tie course-icon"></i>
-                        <h3>Mentorship by Senior</h3>
-                        <div class="course-price">₹199</div>
-                        <p>Get personalized one-on-one guidance from experienced seniors to easily navigate academics and college life.</p>
-                        <button class="action-btn" onclick="buyCourse('Mentorship by Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                    <button type="submit" id="loginBtn">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+                    
+                    <div class="form-footer">
+                        Don't have an account? <a onclick="switchView('signupView')">Sign Up</a>
                     </div>
+                </form>
+            </div>
+        </div>
 
-                    <!-- Course 2 -->
-                    <div class="glass course-card">
-                        <i class="fa-solid fa-chalkboard-user course-icon"></i>
-                        <h3>Guidance by Teacher Senior</h3>
-                        <div class="course-price">₹499</div>
-                        <p>Unlock advanced mentoring by highly experienced senior faculty members for deep technical insights and planning.</p>
-                        <button class="action-btn" onclick="buyCourse('Guidance by Teacher Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
-                    </div>
-
-                    <!-- Course 3 -->
-                    <div class="glass course-card">
-                        <i class="fa-solid fa-briefcase course-icon"></i>
-                        <h3>Mentorship for Internship</h3>
-                        <div class="course-price">₹999</div>
-                        <p>Dedicated preparation for landing top-tier internships, complete with resume reviews and intense mock interviews.</p>
-                        <button class="action-btn" onclick="buyCourse('Mentorship for Internship')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
-                    </div>
-
-                </div>
+        <!-- ================= SIGN UP VIEW ================= -->
+        <div id="signupView" class="view-section">
+            <div class="header">
+                <h1>Course Enrollment</h1>
+                <p>Fill out the details to enroll as a new student.</p>
             </div>
 
+            <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
+                <form id="enrollmentForm">
+                    
+                    <div class="input-box">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="studentName" name="studentName" required autocomplete="off" placeholder=" ">
+                        <label for="studentName">Full Name</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-id-card"></i>
+                        <input type="text" id="rollNumber" name="rollNumber" required autocomplete="off" placeholder=" ">
+                        <label for="rollNumber">Roll Number</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
+                        <label for="studentMail">Student Mail ID</label>
+                    </div>
+                    
+                    <div class="input-box">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required autocomplete="off" placeholder=" ">
+                        <label for="phoneNumber">Phone Number</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <input type="text" id="branch" name="branch" required autocomplete="off" placeholder=" ">
+                        <label for="branch">Branch</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-laptop-code"></i>
+                        <select id="course" name="course" required>
+                            <option value="" hidden></option> 
+                            <option value="DSA">DSA</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="AI & ML">AI & ML</option>
+                            <option value="DBMS">DBMS</option>
+                        </select>
+                        <label for="course">Course to Enroll</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <select id="semester" name="semester" required>
+                            <option value="" hidden></option> 
+                            <option value="1st Semester">1st Semester</option>
+                            <option value="2nd Semester">2nd Semester</option>
+                            <option value="3rd Semester">3rd Semester</option>
+                            <option value="4th Semester">4th Semester</option>
+                        </select>
+                        <label for="semester">Current Semester</label>
+                    </div>
+
+                    <button type="submit" id="submitBtn">Submit Registration <i class="fa-solid fa-paper-plane"></i></button>
+
+                    <div class="form-footer">
+                        Already registered? <a onclick="switchView('loginView')">Login here</a>
+                    </div>
+                </form>
+            </div>
         </div>
+
+        <!-- ================= DASHBOARD VIEW (LOGGED IN) ================= -->
+        <div id="dashboardView" class="view-section">
+            
+            <div class="header">
+                <h1>Premium Programs</h1>
+                <p id="welcomeMessage">Level up your skills today.</p>
+            </div>
+            
+            <div class="course-grid">
+                
+                <!-- Course 1 -->
+                <div class="glass course-card">
+                    <i class="fa-solid fa-user-tie course-icon"></i>
+                    <h3>Mentorship by Senior</h3>
+                    <div class="course-price">₹199</div>
+                    <p>Get personalized one-on-one guidance from experienced seniors to easily navigate academics and college life.</p>
+                    <button class="action-btn" onclick="buyCourse('Mentorship by Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                </div>
+
+                <!-- Course 2 -->
+                <div class="glass course-card">
+                    <i class="fa-solid fa-chalkboard-user course-icon"></i>
+                    <h3>Guidance by Teacher Senior</h3>
+                    <div class="course-price">₹499</div>
+                    <p>Unlock advanced mentoring by highly experienced senior faculty members for deep technical insights and planning.</p>
+                    <button class="action-btn" onclick="buyCourse('Guidance by Teacher Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                </div>
+
+                <!-- Course 3 -->
+                <div class="glass course-card">
+                    <i class="fa-solid fa-briefcase course-icon"></i>
+                    <h3>Mentorship for Internship</h3>
+                    <div class="course-price">₹999</div>
+                    <p>Dedicated preparation for landing top-tier internships, complete with resume reviews and intense mock interviews.</p>
+                    <button class="action-btn" onclick="buyCourse('Mentorship for Internship')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
+    <!-- Bottom spacer for balance -->
+    <div class="spacer bottom"></div>
 
     <!-- Added Footer -->
     <div class="global-footer">
@@ -657,15 +649,15 @@
             document.getElementById('loginAlert').classList.remove('show');
 
             // Expand container wrapper if going to the dashboard
-            const container = document.querySelector('.container');
+            const container = document.getElementById('mainContainer');
             if(viewId === 'dashboardView') {
                 container.classList.add('dashboard-active');
             } else {
                 container.classList.remove('dashboard-active');
             }
 
-            // Scroll to top smoothly when switching views
-            document.getElementById('mainScroll').scrollTo({ top: 0, behavior: 'smooth' });
+            // Scroll to top naturally
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showLoggedInState(user) {
