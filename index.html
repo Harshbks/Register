@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Course Enrollment Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- SHARED THEME VARIABLES --- */
+        :root {
+            --bg-gradient-1: #1a1c2c;
+            --bg-gradient-2: #4a192c;
+            --bg-gradient-3: #0f2027;
+            --bg-gradient-4: #2c5364;
+            --glass-bg: rgba(30, 30, 40, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --input-border: rgba(255, 255, 255, 0.3);
+            --shadow-color: rgba(0, 0, 0, 0.25);
+            --success-color: #4ade80;
+            --error-color: #ef4444;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --select-bg: #1e293b;
+            --link-color: #60a5fa;
+        }
+
+        [data-theme="light"] {
+            --bg-gradient-1: #8EC5FC;
+            --bg-gradient-2: #E0C3FC;
+            --bg-gradient-3: #ffffff;
+            --bg-gradient-4: #D9AFD9;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --input-border: #94a3b8;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --card-bg: rgba(255, 255, 255, 0.4);
+            --select-bg: #ffffff;
+            --link-color: #2563eb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            transition: color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .view-section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .view-section.active {
+            display: block; /* Shown when active */
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px var(--shadow-color);
+            border-radius: 24px;
+        }
+
+        /* Header */
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .header p { font-size: 1rem; color: var(--text-secondary); }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed; top: 1.5rem; right: 1.5rem;
+            width: 48px; height: 48px; border-radius: 50%;
+            cursor: pointer; z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: transform 0.2s;
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
+
+        /* Form Layout */
+        .form-card { padding: 2.5rem 2rem; }
+
+        /* --- FLOATING INPUT FIELDS --- */
+        .input-box { position: relative; margin-bottom: 35px; margin-top: 10px; }
+        .input-box i { position: absolute; left: 0; top: 12px; color: var(--text-secondary); font-size: 1.2rem; transition: 0.3s; }
+        
+        .input-box input, .input-box select {
+            width: 100%; padding: 10px 10px 10px 35px; background: transparent; border: none; outline: none;
+            border-bottom: 2px solid var(--input-border); color: var(--text-primary); font-size: 1rem; letter-spacing: 0.5px; transition: 0.5s;
+            border-radius: 0; box-shadow: none; font-family: 'Inter', sans-serif;
+        }
+
+        .input-box select { cursor: pointer; appearance: none; -webkit-appearance: none; }
+        .input-box select option { background: var(--select-bg); color: var(--text-primary); }
+        
+        .input-box label {
+            position: absolute; left: 35px; top: 10px; color: var(--text-secondary);
+            pointer-events: none; transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); font-size: 1rem; font-weight: 500;
+        }
+
+        /* Add red asterisk for required fields */
+        .input-box input:required ~ label::after,
+        .input-box select:required ~ label::after {
+            content: " *";
+            color: var(--error-color);
+        }
+
+        /* Floating Label Logic */
+        .input-box input:focus ~ label, 
+        .input-box input:not(:placeholder-shown) ~ label, 
+        .input-box select:focus ~ label, 
+        .input-box select:valid ~ label {
+            top: -22px; left: 0; color: var(--success-color); font-size: 0.85rem; font-weight: 600;
+        }
+        
+        .input-box input:focus, .input-box select:focus { border-bottom: 2px solid var(--success-color); }
+        .input-box input:focus ~ i, .input-box select:focus ~ i { color: var(--success-color); }
+
+        /* Buttons & Links */
+        button[type="submit"], .action-btn {
+            width: 100%; padding: 14px; 
+            background: var(--text-primary); 
+            color: var(--bg-gradient-1); 
+            border: none; border-radius: 12px;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer; 
+            transition: all 0.3s ease; 
+            box-shadow: 0 4px 15px var(--shadow-color);
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            margin-top: 1rem;
+        }
+        button[type="submit"]:hover, .action-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px var(--shadow-color); 
+            opacity: 0.9;
+        }
+        button[type="submit"]:active, .action-btn:active { transform: translateY(1px); }
+        button[type="submit"]:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .form-footer a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .form-footer a:hover { text-decoration: underline; }
+
+        /* Error/Alert box */
+        .alert-box {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .alert-box.show { display: block; animation: fadeIn 0.3s; }
+
+        /* Dashboard specific */
+        .dashboard-content { text-align: center; padding: 2rem 0; }
+        .dashboard-content i { font-size: 4rem; color: var(--success-color); margin-bottom: 1rem; }
+        .dashboard-content h2 { margin-bottom: 0.5rem; font-size: 1.8rem; }
+        .dashboard-content p { color: var(--text-secondary); margin-bottom: 2rem; }
+
+        /* Profile Widget (Top Right) */
+        .profile-widget {
+            position: fixed;
+            top: 1.5rem;
+            right: 5rem; /* Next to theme toggle */
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .profile-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        
+        .profile-course {
+            font-size: 0.75rem;
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: var(--error-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .form-card { padding: 2.5rem 1.5rem; }
+            .header h1 { font-size: 1.8rem; }
+            .profile-widget { top: 1rem; right: 4rem; padding: 6px 12px; }
+            .profile-name { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Top Right Profile Widget -->
+    <div class="profile-widget glass" id="profileWidget">
+        <div class="profile-info">
+            <div class="profile-name" id="profileName">Student Name</div>
+            <div class="profile-course" id="profileCourse">Course</div>
+        </div>
+        <button onclick="logout()" class="logout-btn" title="Logout">
+            <i class="fa-solid fa-power-off"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        
+        <!-- ================= LOGIN VIEW ================= -->
+        <div id="loginView" class="view-section active">
+            <div class="header">
+                <h1>Welcome Back</h1>
+                <p>Login to access your course dashboard.</p>
+            </div>
+            
+            <div class="glass form-card">
+                <div id="loginAlert" class="alert-box"></div>
+                <form id="loginForm">
+                    <div class="input-box">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="loginEmail" required autocomplete="email" placeholder=" ">
+                        <label for="loginEmail">Registered Student Mail ID</label>
+                    </div>
+                    
+                    <button type="submit" id="loginBtn">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+                    
+                    <div class="form-footer">
+                        Don't have an account? <a onclick="switchView('signupView')">Sign Up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= SIGN UP VIEW ================= -->
+        <div id="signupView" class="view-section">
+            <div class="header">
+                <h1>Course Enrollment</h1>
+                <p>Fill out the details to enroll as a new student.</p>
+            </div>
+
+            <div class="glass form-card">
+                <form id="enrollmentForm">
+                    
+                    <div class="input-box">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="studentName" name="studentName" required autocomplete="off" placeholder=" ">
+                        <label for="studentName">Full Name</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-id-card"></i>
+                        <input type="text" id="rollNumber" name="rollNumber" required autocomplete="off" placeholder=" ">
+                        <label for="rollNumber">Roll Number</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" ">
+                        <label for="studentMail">Student Mail ID</label>
+                    </div>
+                    
+                    <div class="input-box">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required autocomplete="off" placeholder=" ">
+                        <label for="phoneNumber">Phone Number</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <input type="text" id="branch" name="branch" required autocomplete="off" placeholder=" ">
+                        <label for="branch">Branch</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-laptop-code"></i>
+                        <select id="course" name="course" required>
+                            <option value="" hidden></option> 
+                            <option value="DSA">DSA</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="AI & ML">AI & ML</option>
+                            <option value="DBMS">DBMS</option>
+                        </select>
+                        <label for="course">Course to Enroll</label>
+                    </div>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <select id="semester" name="semester" required>
+                            <option value="" hidden></option> 
+                            <option value="1st Semester">1st Semester</option>
+                            <option value="2nd Semester">2nd Semester</option>
+                            <option value="3rd Semester">3rd Semester</option>
+                            <option value="4th Semester">4th Semester</option>
+                        </select>
+                        <label for="semester">Current Semester</label>
+                    </div>
+
+                    <button type="submit" id="submitBtn">Submit Registration <i class="fa-solid fa-paper-plane"></i></button>
+
+                    <div class="form-footer">
+                        Already registered? <a onclick="switchView('loginView')">Login here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= DASHBOARD VIEW (LOGGED IN) ================= -->
+        <div id="dashboardView" class="view-section">
+            <div class="glass form-card dashboard-content">
+                <i class="fa-solid fa-circle-check"></i>
+                <h2>Login Successful</h2>
+                <p id="welcomeMessage">Welcome to your course dashboard!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- THEME LOGIC ---
+        const themeBtn = document.getElementById('themeBtn');
+        const body = document.body;
+        const themeIcon = themeBtn.querySelector('i');
+
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        body.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+
+        themeBtn.addEventListener('click', () => {
+            const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            if (theme === 'light') {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+
+        // --- NAVIGATION LOGIC ---
+        function switchView(viewId) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show target view
+            document.getElementById(viewId).classList.add('active');
+            
+            // Clear any alerts
+            document.getElementById('loginAlert').classList.remove('show');
+        }
+
+        function showLoggedInState(user) {
+            document.getElementById('profileName').innerText = user.name || user.email.split('@')[0];
+            document.getElementById('profileCourse').innerText = user.course || 'Enrolled Student';
+            document.getElementById('profileWidget').style.display = 'flex';
+            document.getElementById('welcomeMessage').innerText = `Welcome back, ${user.name || user.email.split('@')[0]}!`;
+            switchView('dashboardView');
+        }
+
+        function logout() {
+            localStorage.removeItem('courseAppUser');
+            document.getElementById('profileWidget').style.display = 'none';
+            document.getElementById('loginEmail').value = '';
+            switchView('loginView');
+        }
+
+        // Check login state on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('courseAppUser');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                showLoggedInState(user);
+            }
+        });
+
+        // --- GOOGLE APPS SCRIPT URL ---
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxAO8sDhzOoaZvTBWg5pv7sYwIu49wYVMWOmxcqOEZhavijqHeCsofSeva-NxpjXaCr/exec';
+
+        // --- LOGIN LOGIC ---
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginAlert = document.getElementById('loginAlert');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const originalBtnContent = loginBtn.innerHTML;
+            
+            loginBtn.innerHTML = 'Verifying... <i class="fa-solid fa-spinner fa-spin"></i>';
+            loginBtn.disabled = true;
+            loginAlert.classList.remove('show');
+
+            try {
+                // To perform a check, we append ?action=login&email=... to the URL
+                const response = await fetch(`${scriptURL}?action=login&email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+
+                if (data.status === 'success' && data.exists === true) {
+                    // Email found! Save to localStorage and switch to dashboard
+                    const userObj = {
+                        email: email,
+                        name: data.name,     // Expecting name from backend
+                        course: data.course  // Expecting course from backend
+                    };
+                    localStorage.setItem('courseAppUser', JSON.stringify(userObj));
+                    showLoggedInState(userObj);
+                } else {
+                    // Email not found
+                    loginAlert.innerText = "Data not found in database. Please sign up first.";
+                    loginAlert.classList.add('show');
+                }
+            } catch (error) {
+                console.error("Login Error:", error);
+                // Important Fallback Message if Google Apps Script is not updated yet
+                loginAlert.innerHTML = "<b>Backend Error:</b> Ensure your Google Apps Script is updated to handle GET requests for logins.";
+                loginAlert.classList.add('show');
+            } finally {
+                loginBtn.innerHTML = originalBtnContent;
+                loginBtn.disabled = false;
+            }
+        });
+
+        // --- SIGNUP LOGIC ---
+        const signupForm = document.getElementById('enrollmentForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        signupForm.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            const originalBtnContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Enrolling... <i class="fa-solid fa-spinner fa-spin"></i>';
+            submitBtn.disabled = true;
+            
+            // Note: For sign up, we can still use no-cors if the Apps Script isn't updated, 
+            // but standard form submission is recommended.
+            fetch(scriptURL, { method: 'POST', body: new FormData(signupForm) })
+            .then(response => {
+                submitBtn.innerHTML = 'Registered! <i class="fa-solid fa-check-circle"></i>';
+                submitBtn.style.background = 'var(--success-color)';
+                submitBtn.style.color = '#111827';
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalBtnContent;
+                    submitBtn.style.background = '';
+                    submitBtn.style.color = '';
+                    submitBtn.disabled = false;
+                    
+                    signupForm.reset();
+                    // Auto-switch to login page after successful registration
+                    switchView('loginView');
+                    
+                }, 3000);
+            })
+            .catch(error => {
+                submitBtn.innerHTML = 'Error! <i class="fa-solid fa-triangle-exclamation"></i>';
+                submitBtn.style.background = 'var(--error-color)'; 
+                submitBtn.style.color = '#fff';
+                console.error('Submission Error:', error);
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalBtnContent;
+                    submitBtn.style.background = '';
+                    submitBtn.style.color = '';
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
