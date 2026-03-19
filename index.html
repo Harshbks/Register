@@ -77,6 +77,12 @@
             max-width: 550px;
             position: relative;
             z-index: 1;
+            transition: max-width 0.5s ease;
+        }
+
+        /* Expands the container specifically for the dashboard grid */
+        .container.dashboard-active {
+            max-width: 1000px;
         }
 
         .view-section {
@@ -207,11 +213,54 @@
 
         .alert-box.show { display: block; animation: fadeIn 0.3s; }
 
-        /* Dashboard specific */
-        .dashboard-content { text-align: center; padding: 2rem 0; }
-        .dashboard-content i { font-size: 4rem; color: var(--success-color); margin-bottom: 1rem; }
-        .dashboard-content h2 { margin-bottom: 0.5rem; font-size: 1.8rem; }
-        .dashboard-content p { color: var(--text-secondary); margin-bottom: 2rem; }
+        /* Dashboard specific - Grid and Cards */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .course-card {
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px var(--shadow-color);
+        }
+
+        .course-icon {
+            font-size: 3.5rem;
+            color: var(--link-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .course-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .course-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--success-color);
+            margin: 1rem 0;
+        }
+
+        .course-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
 
         /* Profile Widget (Top Right) */
         .profile-widget {
@@ -221,7 +270,7 @@
             z-index: 1000;
             display: none; /* Hidden by default */
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             padding: 8px 16px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -244,22 +293,28 @@
         
         .profile-course {
             font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .profile-course span {
             color: var(--success-color);
-            font-weight: 600;
+            font-weight: 700;
         }
         
         .logout-btn {
             background: rgba(239, 68, 68, 0.1);
             color: var(--error-color);
             border: 1px solid rgba(239, 68, 68, 0.3);
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: 0.2s;
+            font-size: 1.1rem;
         }
         
         .logout-btn:hover {
@@ -268,11 +323,35 @@
             transform: scale(1.1);
         }
 
+        /* Custom Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--text-primary);
+            color: var(--bg-gradient-1);
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px var(--shadow-color);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
         /* Responsive */
-        @media (max-width: 500px) {
-            .form-card { padding: 2.5rem 1.5rem; }
-            .header h1 { font-size: 1.8rem; }
-            .profile-widget { top: 1rem; right: 4rem; padding: 6px 12px; }
+        @media (max-width: 768px) {
+            .course-grid { grid-template-columns: 1fr; }
+            .profile-widget { top: 1rem; right: 4rem; padding: 6px 12px; gap: 10px;}
             .profile-name { font-size: 0.85rem; }
         }
     </style>
@@ -287,11 +366,16 @@
     <div class="profile-widget glass" id="profileWidget">
         <div class="profile-info">
             <div class="profile-name" id="profileName">Student Name</div>
-            <div class="profile-course" id="profileCourse">Course</div>
+            <div class="profile-course">Enrolled: <span id="profileCourse">Course</span></div>
         </div>
         <button onclick="logout()" class="logout-btn" title="Logout">
             <i class="fa-solid fa-power-off"></i>
         </button>
+    </div>
+
+    <!-- Toast Notification for Buys -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-notch fa-spin"></i> <span id="toastMsg">Processing...</span>
     </div>
 
     <div class="container">
@@ -303,7 +387,7 @@
                 <p>Login to access your course dashboard.</p>
             </div>
             
-            <div class="glass form-card">
+            <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
                 <div id="loginAlert" class="alert-box"></div>
                 <form id="loginForm">
                     <div class="input-box">
@@ -328,7 +412,7 @@
                 <p>Fill out the details to enroll as a new student.</p>
             </div>
 
-            <div class="glass form-card">
+            <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
                 <form id="enrollmentForm">
                     
                     <div class="input-box">
@@ -396,10 +480,40 @@
 
         <!-- ================= DASHBOARD VIEW (LOGGED IN) ================= -->
         <div id="dashboardView" class="view-section">
-            <div class="glass form-card dashboard-content">
-                <i class="fa-solid fa-circle-check"></i>
-                <h2>Login Successful</h2>
-                <p id="welcomeMessage">Welcome to your course dashboard!</p>
+            <div class="header">
+                <h1>Premium Programs</h1>
+                <p id="welcomeMessage">Welcome back, level up your skills today.</p>
+            </div>
+            
+            <div class="course-grid">
+                
+                <!-- Course 1 -->
+                <div class="glass course-card">
+                    <i class="fa-solid fa-user-tie course-icon"></i>
+                    <h3>Mentorship by Senior</h3>
+                    <div class="course-price">₹199</div>
+                    <p>Get personalized one-on-one guidance from experienced seniors to easily navigate academics and college life.</p>
+                    <button class="action-btn" onclick="buyCourse('Mentorship by Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                </div>
+
+                <!-- Course 2 -->
+                <div class="glass course-card">
+                    <i class="fa-solid fa-chalkboard-user course-icon"></i>
+                    <h3>Guidance by Teacher Senior</h3>
+                    <div class="course-price">₹499</div>
+                    <p>Unlock advanced mentoring by highly experienced senior faculty members for deep technical insights and planning.</p>
+                    <button class="action-btn" onclick="buyCourse('Guidance by Teacher Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                </div>
+
+                <!-- Course 3 -->
+                <div class="glass course-card">
+                    <i class="fa-solid fa-briefcase course-icon"></i>
+                    <h3>Mentorship for Internship</h3>
+                    <div class="course-price">₹999</div>
+                    <p>Dedicated preparation for landing top-tier internships, complete with resume reviews and intense mock interviews.</p>
+                    <button class="action-btn" onclick="buyCourse('Mentorship for Internship')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                </div>
+
             </div>
         </div>
 
@@ -443,13 +557,21 @@
             
             // Clear any alerts
             document.getElementById('loginAlert').classList.remove('show');
+
+            // Expand container wrapper if going to the dashboard
+            const container = document.querySelector('.container');
+            if(viewId === 'dashboardView') {
+                container.classList.add('dashboard-active');
+            } else {
+                container.classList.remove('dashboard-active');
+            }
         }
 
         function showLoggedInState(user) {
             document.getElementById('profileName').innerText = user.name || user.email.split('@')[0];
-            document.getElementById('profileCourse').innerText = user.course || 'Enrolled Student';
+            document.getElementById('profileCourse').innerText = user.course || 'N/A';
             document.getElementById('profileWidget').style.display = 'flex';
-            document.getElementById('welcomeMessage').innerText = `Welcome back, ${user.name || user.email.split('@')[0]}!`;
+            document.getElementById('welcomeMessage').innerText = `Welcome back ${user.name || user.email.split('@')[0]}! Ready to level up?`;
             switchView('dashboardView');
         }
 
@@ -458,6 +580,17 @@
             document.getElementById('profileWidget').style.display = 'none';
             document.getElementById('loginEmail').value = '';
             switchView('loginView');
+        }
+
+        function buyCourse(courseName) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = `Initiating secure payment for ${courseName}...`;
+            toast.classList.add('show');
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         // Check login state on page load
