@@ -470,7 +470,7 @@
         });
 
         // --- GOOGLE APPS SCRIPT URL ---
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxAO8sDhzOoaZvTBWg5pv7sYwIu49wYVMWOmxcqOEZhavijqHeCsofSeva-NxpjXaCr/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycby9iO8xQQHhJSnRkcfaVDMwgJaa6TPeu6OjN1MlDSlN5vwUGS0Tnfdu1_XOUd--8MM/exec';
 
         // --- LOGIN LOGIC ---
         const loginForm = document.getElementById('loginForm');
@@ -527,8 +527,12 @@
             submitBtn.innerHTML = 'Enrolling... <i class="fa-solid fa-spinner fa-spin"></i>';
             submitBtn.disabled = true;
             
-            // Fixed: Added mode: 'no-cors' so the browser doesn't block the POST submission.
-            fetch(scriptURL, { method: 'POST', body: new FormData(signupForm), mode: 'no-cors' })
+            // Convert FormData to URLSearchParams for better Google Apps Script compatibility
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: new URLSearchParams(new FormData(signupForm)), 
+                mode: 'no-cors' 
+            })
             .then(response => {
                 submitBtn.innerHTML = 'Registered! <i class="fa-solid fa-check-circle"></i>';
                 submitBtn.style.background = 'var(--success-color)';
