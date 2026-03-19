@@ -72,6 +72,11 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
         .container {
             width: 100%;
             max-width: 550px;
@@ -108,9 +113,9 @@
         .header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .header p { font-size: 1rem; color: var(--text-secondary); }
 
-        /* Theme Toggle */
-        .theme-toggle {
-            position: fixed; top: 1.5rem; right: 1.5rem;
+        /* Top Right Fixed Icons */
+        .theme-toggle, .profile-toggle {
+            position: fixed; top: 1.5rem; 
             width: 48px; height: 48px; border-radius: 50%;
             cursor: pointer; z-index: 1000;
             display: flex; align-items: center; justify-content: center;
@@ -121,7 +126,73 @@
             box-shadow: 0 4px 12px var(--shadow-color);
             transition: transform 0.2s;
         }
-        .theme-toggle:hover { transform: scale(1.1); }
+        
+        .theme-toggle { right: 5.5rem; } /* Pushed to the left of the profile icon */
+        .profile-toggle { right: 1.5rem; display: none; } /* Hidden until logged in */
+
+        .theme-toggle:hover, .profile-toggle:hover { transform: scale(1.1); }
+
+        /* Profile Dropdown Container */
+        .profile-dropdown {
+            position: fixed;
+            top: 5rem;
+            right: 1.5rem;
+            width: 260px;
+            padding: 1.5rem;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .profile-dropdown.show {
+            display: flex;
+            animation: scaleIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        .profile-avatar-small {
+            width: 60px;
+            height: 60px;
+            background: rgba(96, 165, 250, 0.15);
+            color: var(--link-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-dropdown h3 { font-size: 1.2rem; margin: 0 0 0.5rem 0; color: var(--text-primary); }
+        .profile-dropdown p { color: var(--text-secondary); margin: 0.2rem 0; font-size: 0.9rem; }
+        .profile-dropdown span { font-weight: 700; color: var(--success-color); }
+        
+        .logout-dash-btn {
+            margin-top: 1.2rem;
+            width: 100%;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .logout-dash-btn:hover {
+            background: var(--error-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
 
         /* Form Layout */
         .form-card { padding: 2.5rem 2rem; }
@@ -287,54 +358,6 @@
             opacity: 1;
         }
 
-        /* Dashboard Profile Banner */
-        .profile-banner {
-            padding: 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            background: rgba(96, 165, 250, 0.15);
-            color: var(--link-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .profile-banner h2 { font-size: 1.8rem; margin: 0; color: var(--text-primary); }
-        .profile-banner p { color: var(--text-secondary); margin: 0; font-size: 1rem; }
-        .profile-banner span { font-weight: 700; color: var(--success-color); }
-        
-        .logout-dash-btn {
-            margin-top: 1rem;
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error-color);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 10px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-        .logout-dash-btn:hover {
-            background: var(--error-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .course-grid { grid-template-columns: 1fr; }
@@ -343,9 +366,27 @@
 </head>
 <body>
 
-    <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme">
+    <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme" title="Toggle Theme">
         <i class="fas fa-moon"></i>
     </button>
+
+    <button class="profile-toggle" id="profileToggleBtn" aria-label="Toggle Profile" title="View Profile">
+        <i class="fa-solid fa-user"></i>
+    </button>
+
+    <!-- Dropdown for Student Profile -->
+    <div class="profile-dropdown glass" id="profileDropdown">
+        <div class="profile-avatar-small">
+            <i class="fa-solid fa-user-graduate"></i>
+        </div>
+        <h3 id="profileNameDisplay">Student Name</h3>
+        <p>Roll No: <span id="profileRollDisplay" style="color: var(--text-primary);">N/A</span></p>
+        <p>Course: <span id="profileCourseDisplay">N/A</span></p>
+        
+        <button onclick="logout()" class="logout-dash-btn">
+            Logout <i class="fa-solid fa-power-off"></i>
+        </button>
+    </div>
 
     <!-- Toast Notification for Buys -->
     <div id="toast" class="toast">
@@ -455,23 +496,9 @@
         <!-- ================= DASHBOARD VIEW (LOGGED IN) ================= -->
         <div id="dashboardView" class="view-section">
             
-            <!-- Student Profile Section -->
-            <div class="glass profile-banner">
-                <div class="profile-avatar">
-                    <i class="fa-solid fa-user-graduate"></i>
-                </div>
-                <h2 id="profileNameDisplay">Student Name</h2>
-                <p>Roll No: <span id="profileRollDisplay" style="color: var(--text-primary);">N/A</span></p>
-                <p>Enrolled Course: <span id="profileCourseDisplay">N/A</span></p>
-                
-                <button onclick="logout()" class="logout-dash-btn">
-                    Logout <i class="fa-solid fa-power-off"></i>
-                </button>
-            </div>
-
             <div class="header">
                 <h1>Premium Programs</h1>
-                <p>Level up your skills today.</p>
+                <p id="welcomeMessage">Level up your skills today.</p>
             </div>
             
             <div class="course-grid">
@@ -535,6 +562,22 @@
             }
         }
 
+        // --- PROFILE DROPDOWN LOGIC ---
+        const profileToggleBtn = document.getElementById('profileToggleBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+
+        profileToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent document click from immediately closing it
+            profileDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileDropdown.contains(e.target) && !profileToggleBtn.contains(e.target)) {
+                profileDropdown.classList.remove('show');
+            }
+        });
+
         // --- NAVIGATION LOGIC ---
         function switchView(viewId) {
             // Hide all views
@@ -557,15 +600,23 @@
         }
 
         function showLoggedInState(user) {
+            // Update profile dropdown info
             document.getElementById('profileNameDisplay').innerText = user.name || user.email.split('@')[0];
             document.getElementById('profileRollDisplay').innerText = user.roll || 'N/A';
             document.getElementById('profileCourseDisplay').innerText = user.course || 'N/A';
+            document.getElementById('welcomeMessage').innerText = `Welcome back ${user.name || user.email.split('@')[0]}! Ready to level up?`;
+            
+            // Show the profile button icon
+            document.getElementById('profileToggleBtn').style.display = 'flex';
+            
             switchView('dashboardView');
         }
 
         function logout() {
             localStorage.removeItem('courseAppUser');
             document.getElementById('loginEmail').value = '';
+            document.getElementById('profileToggleBtn').style.display = 'none'; // Hide profile icon
+            profileDropdown.classList.remove('show'); // Close dropdown
             switchView('loginView');
         }
 
