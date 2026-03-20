@@ -6,48 +6,53 @@
     <title>Course Enrollment Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         /* --- SHARED THEME VARIABLES --- */
         :root {
-            --bg-gradient-1: #1a1c2c;
-            --bg-gradient-2: #4a192c;
-            --bg-gradient-3: #0f2027;
-            --bg-gradient-4: #2c5364;
-            --glass-bg: rgba(30, 30, 40, 0.75);
+            --bg-gradient-1: #0f172a;
+            --bg-gradient-2: #1e1b4b;
+            --bg-gradient-3: #172554;
+            --bg-gradient-4: #020617;
+            --glass-bg: rgba(30, 30, 40, 0.65);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
+            --text-secondary: #94a3b8;
             --input-border: rgba(255, 255, 255, 0.3);
-            --shadow-color: rgba(0, 0, 0, 0.25);
+            --shadow-color: rgba(0, 0, 0, 0.4);
             --success-color: #4ade80;
             --error-color: #ef4444;
             --card-bg: rgba(255, 255, 255, 0.03);
             --select-bg: #1e293b;
             --link-color: #60a5fa;
+            
+            /* Launchpad Specific Colors */
+            --launch-orange: #f97316;
+            --launch-green: #22c55e;
+            --launch-indigo: #4f46e5;
+            --launch-blue: #2563eb;
         }
 
         [data-theme="light"] {
-            --bg-gradient-1: #8EC5FC;
-            --bg-gradient-2: #E0C3FC;
+            --bg-gradient-1: #e0f2fe;
+            --bg-gradient-2: #f3e8ff;
             --bg-gradient-3: #ffffff;
-            --bg-gradient-4: #D9AFD9;
-            --glass-bg: rgba(255, 255, 255, 0.75);
+            --bg-gradient-4: #dbeafe;
+            --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.6);
-            --text-primary: #111827;
-            --text-secondary: #4b5563;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
             --input-border: #94a3b8;
             --shadow-color: rgba(0, 0, 0, 0.08);
-            --card-bg: rgba(255, 255, 255, 0.4);
+            --card-bg: rgba(255, 255, 255, 0.6);
             --select-bg: #ffffff;
             --link-color: #2563eb;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Full Screen & Safe Scroll Body */
         html { scroll-behavior: smooth; }
         
         body {
@@ -75,44 +80,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.9) translateY(-10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* Spacers securely push the form to the center, avoiding top cut-offs! */
         .spacer {
             flex-grow: 1;
-            min-height: 6rem; /* Guarantees safe spacing below the top icons */
+            min-height: 5rem; 
             flex-shrink: 0;
         }
-        .spacer.bottom {
-            min-height: 3rem; /* Bottom breathing room */
-        }
+        .spacer.bottom { min-height: 3rem; }
 
         .container {
             width: 100%;
             max-width: 550px;
-            margin: 0 auto; /* Horizontal center only. Vertical uses spacers. */
+            margin: 0 auto; 
             position: relative;
             z-index: 1;
             transition: max-width 0.5s ease;
-            flex-shrink: 0; /* Prevents form from compressing */
+            flex-shrink: 0; 
         }
 
-        /* Expands the container specifically for the dashboard grid */
-        .container.dashboard-active {
-            max-width: 1000px;
-        }
+        .container.dashboard-active { max-width: 1100px; }
 
         .view-section {
             display: none; 
             animation: fadeIn 0.4s ease-out forwards;
         }
 
-        .view-section.active {
-            display: block; 
-        }
+        .view-section.active { display: block; }
 
         .glass {
             background: var(--glass-bg);
@@ -123,12 +115,7 @@
             border-radius: 24px;
         }
 
-        /* Header */
-        .header { text-align: center; margin-bottom: 2.5rem; }
-        .header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .header p { font-size: 1rem; color: var(--text-secondary); line-height: 1.5; }
-
-        /* Top Right Icons Container - Absolute to Document (Scrolls naturally) */
+        /* Top Right Icons */
         .top-right-actions {
             position: absolute;
             top: 1.5rem;
@@ -138,7 +125,7 @@
             z-index: 1000;
         }
 
-        .theme-toggle, .profile-toggle {
+        .theme-toggle, .profile-toggle, .login-toggle {
             width: 48px; height: 48px; border-radius: 50%;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
@@ -152,83 +139,235 @@
         
         .profile-toggle { display: none; } 
 
-        .theme-toggle:hover, .profile-toggle:hover { 
+        .theme-toggle:hover, .profile-toggle:hover, .login-toggle:hover { 
             transform: scale(1.1); 
             box-shadow: 0 6px 16px var(--shadow-color);
         }
 
-        /* Profile Dropdown Container */
-        .profile-dropdown {
-            position: absolute;
-            top: 5rem;
-            right: 1.5rem;
-            width: 260px;
-            padding: 1.5rem;
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            z-index: 1000;
-            border-radius: 20px;
-            text-align: center;
-        }
-
-        .profile-dropdown.show {
-            display: flex;
-            animation: scaleIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-        }
-
-        .profile-avatar-small {
-            width: 60px;
-            height: 60px;
-            background: rgba(96, 165, 250, 0.15);
-            color: var(--link-color);
-            border-radius: 50%;
+        /* --- NEW LAUNCHPAD DASHBOARD DESIGN --- */
+        
+        /* Hero Section */
+        .hero-section {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
+            justify-content: space-between;
+            padding: 3rem;
+            border-radius: 24px;
+            margin-bottom: 2.5rem;
+            gap: 2rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(79, 70, 229, 0.1));
+            border: 1px solid var(--glass-border);
+        }
+
+        .hero-text { flex: 1; }
+        .hero-text h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
             margin-bottom: 1rem;
         }
-
-        .profile-dropdown h3 { font-size: 1.2rem; margin: 0 0 0.5rem 0; color: var(--text-primary); }
-        .profile-dropdown p { color: var(--text-secondary); margin: 0.2rem 0; font-size: 0.9rem; }
-        .profile-dropdown span { font-weight: 700; color: var(--success-color); }
+        .hero-text h1 span { color: var(--launch-orange); }
+        .hero-text p.subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
         
-        .logout-dash-btn {
-            margin-top: 1.2rem;
-            width: 100%;
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error-color);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 10px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero-visual i {
+            font-size: 8rem;
+            color: var(--launch-orange);
+            filter: drop-shadow(0 0 30px rgba(249, 115, 22, 0.4));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Launchpad Feature Cards */
+        .launchpad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .launchpad-card {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: var(--card-bg);
+        }
+
+        .launchpad-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px var(--shadow-color);
+        }
+
+        .icon-wrapper {
+            width: 90px;
+            height: 90px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .icon-green { background: #dcfce7; color: #16a34a; }
+        .icon-orange { background: #ffedd5; color: #ea580c; }
+        .icon-indigo { background: #e0e7ff; color: #4f46e5; }
+        .icon-blue { background: #dbeafe; color: #2563eb; }
+
+        .launchpad-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .launchpad-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .launch-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
             transition: all 0.2s ease;
         }
+        .launch-btn:hover { opacity: 0.9; transform: scale(1.02); }
+        
+        .btn-green { background: var(--launch-green); }
+        .btn-orange { background: var(--launch-orange); }
+        .btn-indigo { background: var(--launch-indigo); }
+        .btn-blue { background: var(--launch-blue); }
 
-        .logout-dash-btn:hover {
-            background: var(--error-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        /* Section Titles */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .decorative-line {
+            height: 2px;
+            background: var(--input-border);
+            flex: 0 1 50px;
         }
 
-        /* Form Layout */
-        .form-card { padding: 2.5rem 2rem; }
+        /* How It Works Section */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
 
-        /* --- FLOATING INPUT FIELDS --- */
+        .step-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .step-icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem auto;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--text-primary);
+            box-shadow: 0 10px 25px var(--shadow-color);
+        }
+
+        .step-item h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .step-item p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Success Stories */
+        .testimonial-card {
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            padding: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            border-radius: 20px;
+        }
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--launch-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+        .testimonial-content p.quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+        .testimonial-content p.author {
+            color: var(--launch-orange);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        /* --- EXISTING FORM CSS --- */
+        .header { text-align: center; margin-bottom: 2.5rem; }
+        .header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .header p { font-size: 1rem; color: var(--text-secondary); }
+
+        .form-card { padding: 2.5rem 2rem; }
         .input-box { position: relative; margin-bottom: 35px; margin-top: 10px; }
         .input-box i { position: absolute; left: 0; top: 12px; color: var(--text-secondary); font-size: 1.2rem; transition: 0.3s; }
         
         .input-box input, .input-box select {
             width: 100%; padding: 10px 10px 10px 35px; background: transparent; border: none; outline: none;
-            border-bottom: 2px solid var(--input-border); color: var(--text-primary); font-size: 1rem; letter-spacing: 0.5px; transition: 0.5s;
+            border-bottom: 2px solid var(--input-border); color: var(--text-primary); font-size: 1rem; transition: 0.5s;
             border-radius: 0; box-shadow: none; font-family: 'Inter', sans-serif;
         }
 
@@ -237,17 +376,12 @@
         
         .input-box label {
             position: absolute; left: 35px; top: 10px; color: var(--text-secondary);
-            pointer-events: none; transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); font-size: 1rem; font-weight: 500;
+            pointer-events: none; transition: 0.4s ease; font-size: 1rem; font-weight: 500;
         }
 
-        /* Add red asterisk for required fields */
         .input-box input:required ~ label::after,
-        .input-box select:required ~ label::after {
-            content: " *";
-            color: var(--error-color);
-        }
+        .input-box select:required ~ label::after { content: " *"; color: var(--error-color); }
 
-        /* Floating Label Logic */
         .input-box input:focus ~ label, 
         .input-box input:not(:placeholder-shown) ~ label, 
         .input-box select:focus ~ label, 
@@ -258,198 +392,71 @@
         .input-box input:focus, .input-box select:focus { border-bottom: 2px solid var(--success-color); }
         .input-box input:focus ~ i, .input-box select:focus ~ i { color: var(--success-color); }
 
-        /* Buttons & Links */
         button[type="submit"], .action-btn {
-            width: 100%; padding: 14px; 
-            background: var(--text-primary); 
-            color: var(--bg-gradient-1); 
-            border: none; border-radius: 12px;
-            font-size: 1.1rem; font-weight: 700; cursor: pointer; 
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 15px var(--shadow-color);
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            margin-top: 1rem;
+            width: 100%; padding: 14px; background: var(--text-primary); color: var(--bg-gradient-1); 
+            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; 
+            transition: all 0.3s ease; box-shadow: 0 4px 15px var(--shadow-color);
+            display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 1rem;
         }
-        button[type="submit"]:hover, .action-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 25px var(--shadow-color); 
-            opacity: 0.9;
-        }
-        button[type="submit"]:active, .action-btn:active { transform: translateY(1px); }
-        button[type="submit"]:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+        button[type="submit"]:hover, .action-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--shadow-color); opacity: 0.9; }
 
-        .form-footer {
-            margin-top: 1.5rem;
-            text-align: center;
-            font-size: 0.95rem;
-        }
-
-        .form-footer a {
-            color: var(--link-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: 0.2s;
-            cursor: pointer;
-        }
+        .form-footer { margin-top: 1.5rem; text-align: center; font-size: 0.95rem; }
+        .form-footer a { color: var(--link-color); text-decoration: none; font-weight: 600; cursor: pointer; }
         .form-footer a:hover { text-decoration: underline; }
 
-        /* Error/Alert box */
         .alert-box {
-            display: none;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--error-color);
-            color: var(--error-color);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.9rem;
+            display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error-color);
+            color: var(--error-color); padding: 12px; border-radius: 8px; margin-bottom: 20px;
+            text-align: center; font-weight: 500; font-size: 0.9rem;
         }
-
         .alert-box.show { display: block; animation: fadeIn 0.3s; }
 
-        /* Dashboard specific - Grid and Cards */
-        .course-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 2.5rem; /* Space between header and cards */
-        }
-
-        .course-card {
-            padding: 2.5rem 2rem;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .course-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px var(--shadow-color);
-        }
-
-        .course-icon {
-            font-size: 3.5rem;
-            color: var(--link-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .course-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .course-price {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--success-color);
-            margin: 1rem 0;
-        }
-
-        .course-card p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            flex-grow: 1;
-        }
-
-        /* Custom Toast Notification */
         .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--text-primary);
-            color: var(--bg-gradient-1);
-            padding: 15px 25px;
-            border-radius: 12px;
-            font-weight: 600;
-            box-shadow: 0 8px 20px var(--shadow-color);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            position: fixed; bottom: 30px; right: 30px; background: var(--text-primary); color: var(--bg-gradient-1);
+            padding: 15px 25px; border-radius: 12px; font-weight: 600; box-shadow: 0 8px 20px var(--shadow-color);
+            transform: translateY(100px); opacity: 0; transition: 0.3s ease; z-index: 2000;
+            display: flex; align-items: center; gap: 10px;
         }
+        .toast.show { transform: translateY(0); opacity: 1; }
 
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
+        .global-footer { padding: 1.5rem 0; text-align: center; font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; }
 
-        /* Global Footer */
-        .global-footer {
-            padding: 1.5rem 0;
-            text-align: center;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            flex-shrink: 0;
-        }
-
-        /* Responsive Mobile Adjustments */
         @media (max-width: 768px) {
-            .course-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .top-right-actions { top: 1rem; right: 1rem; gap: 0.5rem; }
-            .profile-dropdown { top: 4.5rem; right: 1rem; padding: 1.25rem; width: 240px; }
-            .header h1 { font-size: 1.8rem; }
-        }
-
-        @media (max-width: 500px) {
-            .form-card { padding: 2rem 1.5rem; }
-            .course-card { padding: 2rem 1.5rem; }
-            .theme-toggle, .profile-toggle { width: 42px; height: 42px; font-size: 1.2rem; }
+            .hero-section { flex-direction: column; padding: 2rem; text-align: center; }
+            .hero-text h1 { font-size: 2.2rem; }
+            .hero-visual { display: none; /* Hide visual on small screens for space */ }
+            .testimonial-card { flex-direction: column; text-align: center; padding: 1.5rem; gap: 1rem; }
+            .launchpad-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Container for dynamic top-right icons (Absolute to Document - Will scroll normally) -->
     <div class="top-right-actions">
         <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme" title="Toggle Theme">
             <i class="fas fa-moon"></i>
         </button>
-
+        <button class="login-toggle" id="loginToggleBtn" aria-label="Login" title="Login / Sign Up">
+            <i class="fa-solid fa-right-to-bracket"></i>
+        </button>
         <button class="profile-toggle" id="profileToggleBtn" aria-label="Toggle Profile" title="View Profile">
             <i class="fa-solid fa-user"></i>
         </button>
     </div>
 
-    <!-- Dropdown for Student Profile -->
-    <div class="profile-dropdown glass" id="profileDropdown">
-        <div class="profile-avatar-small">
-            <i class="fa-solid fa-user-graduate"></i>
-        </div>
-        <h3 id="profileNameDisplay">Student Name</h3>
-        <p>Roll No: <span id="profileRollDisplay" style="color: var(--text-primary);">N/A</span></p>
-        <p>Course: <span id="profileCourseDisplay">N/A</span></p>
-        
-        <button onclick="logout()" class="logout-dash-btn">
-            Logout <i class="fa-solid fa-power-off"></i>
-        </button>
-    </div>
-
-    <!-- Toast Notification for Buys (Fixed so it overlaps) -->
     <div id="toast" class="toast">
         <i class="fa-solid fa-circle-notch fa-spin"></i> <span id="toastMsg">Processing...</span>
     </div>
 
-    <!-- Top spacer to perfectly balance the container and prevent icon overlap -->
     <div class="spacer"></div>
 
-    <div class="container" id="mainContainer">
+    <div class="container dashboard-active" id="mainContainer">
         
         <!-- ================= LOGIN VIEW ================= -->
-        <div id="loginView" class="view-section active">
+        <div id="loginView" class="view-section">
             <div class="header">
                 <h1>Welcome Back</h1>
-                <p>Login to access your course dashboard.</p>
+                <p>Login to access your personalized launchpad.</p>
             </div>
             
             <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
@@ -479,37 +486,31 @@
 
             <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
                 <form id="enrollmentForm">
-                    
                     <div class="input-box">
                         <i class="fa-solid fa-user"></i>
                         <input type="text" id="studentName" name="studentName" required autocomplete="off" placeholder=" ">
                         <label for="studentName">Full Name</label>
                     </div>
-
                     <div class="input-box">
                         <i class="fa-solid fa-id-card"></i>
                         <input type="text" id="rollNumber" name="rollNumber" required autocomplete="off" placeholder=" ">
                         <label for="rollNumber">Roll Number</label>
                     </div>
-
                     <div class="input-box">
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
+                        <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" ">
                         <label for="studentMail">Student Mail ID</label>
                     </div>
-                    
                     <div class="input-box">
                         <i class="fa-solid fa-phone"></i>
                         <input type="tel" id="phoneNumber" name="phoneNumber" required autocomplete="off" placeholder=" ">
                         <label for="phoneNumber">Phone Number</label>
                     </div>
-
                     <div class="input-box">
                         <i class="fa-solid fa-building-columns"></i>
                         <input type="text" id="branch" name="branch" required autocomplete="off" placeholder=" ">
                         <label for="branch">Branch</label>
                     </div>
-
                     <div class="input-box">
                         <i class="fa-solid fa-laptop-code"></i>
                         <select id="course" name="course" required>
@@ -521,7 +522,6 @@
                         </select>
                         <label for="course">Course to Enroll</label>
                     </div>
-
                     <div class="input-box">
                         <i class="fa-solid fa-graduation-cap"></i>
                         <select id="semester" name="semester" required>
@@ -543,63 +543,158 @@
             </div>
         </div>
 
-        <!-- ================= DASHBOARD VIEW (LOGGED IN) ================= -->
-        <div id="dashboardView" class="view-section">
+        <!-- ================= LAUNCHPAD DASHBOARD VIEW ================= -->
+        <div id="dashboardView" class="view-section active">
             
-            <div class="header">
-                <h1>Premium Programs</h1>
-                <p id="welcomeMessage">Level up your skills today.</p>
+            <!-- Hero Banner -->
+            <div class="hero-section glass">
+                <div class="hero-text">
+                    <h1>Career Launchpad <br>for <span>1st-Year Students</span></h1>
+                    <p class="subtitle">Find Your Path. Land Your Internship. Build Your Future.</p>
+                    <p id="welcomeMessage" style="color: var(--success-color); font-weight: 600; margin-top: 15px; display: none;">
+                        Welcome back!
+                    </p>
+                </div>
+                <div class="hero-visual">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+            </div>
+
+            <!-- 4 Main Action Cards -->
+            <div class="launchpad-grid">
+                
+                <!-- Discover Domain -->
+                <div class="glass launchpad-card">
+                    <div class="icon-wrapper icon-green"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <h3>Discover Your Domain</h3>
+                    <p>AI, Web Dev, Core... Find your perfect fit!</p>
+                    <button class="launch-btn btn-green" onclick="accessResource('quiz')">Take the Quiz</button>
+                </div>
+
+                <!-- Roadmaps -->
+                <div class="glass launchpad-card">
+                    <div class="icon-wrapper icon-orange"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <h3>Step-by-Step Roadmaps</h3>
+                    <p>Guided Plans to Success</p>
+                    <button class="launch-btn btn-orange" onclick="accessResource('roadmap')">Explore Roadmaps</button>
+                </div>
+
+                <!-- Internship Guidance -->
+                <div class="glass launchpad-card">
+                    <div class="icon-wrapper icon-indigo"><i class="fa-solid fa-briefcase"></i></div>
+                    <h3>Internship Guidance</h3>
+                    <p>Resume tips & application secrets</p>
+                    <button class="launch-btn btn-indigo" onclick="accessResource('guidance')">Get Internship Help</button>
+                </div>
+
+                <!-- Community -->
+                <div class="glass launchpad-card">
+                    <div class="icon-wrapper icon-blue"><i class="fa-solid fa-users-viewfinder"></i></div>
+                    <h3>Join the Community</h3>
+                    <p>Learn & grow with peers</p>
+                    <button class="launch-btn btn-blue" onclick="accessResource('community')">Join the Group</button>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="section-header">
+                <span class="decorative-line"></span>
+                <h2>How It Works</h2>
+                <span class="decorative-line"></span>
             </div>
             
-            <div class="course-grid">
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-icon-container"><i class="fa-solid fa-list-check"></i></div>
+                    <h4>1. Take the Quiz</h4>
+                    <p>Find your ideal domain</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon-container"><i class="fa-solid fa-route"></i></div>
+                    <h4>2. Follow the Roadmap</h4>
+                    <p>Learn & build projects</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon-container"><i class="fa-solid fa-user-tie"></i></div>
+                    <h4>3. Get Your Internship</h4>
+                    <p>Apply & land your internship</p>
+                </div>
+            </div>
+
+            <!-- Success Stories -->
+            <div class="section-header" style="flex-direction: column; gap: 0.5rem;">
+                <h2>Success Stories</h2>
+                <p style="color: var(--text-secondary);">From Freshers to Interns!</p>
+            </div>
+
+            <div class="glass testimonial-card">
+                <div class="testimonial-avatar">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+                <div class="testimonial-content">
+                    <p class="quote">“Following these roadmaps helped me land my first tech internship in just 3 months! The community support is unmatched.”</p>
+                    <p class="author">- Rahul, CSE Student</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= PROFILE VIEW ================= -->
+        <div id="profileView" class="view-section">
+            <div class="header">
+                <h1>Student Profile</h1>
+                <p>Your enrollment and account details.</p>
+            </div>
+            <div class="glass form-card" style="max-width: 550px; margin: 0 auto; text-align: center;">
+                <div style="width: 80px; height: 80px; background: rgba(96, 165, 250, 0.15); color: var(--link-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem auto;">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
                 
-                <!-- Course 1 -->
-                <div class="glass course-card">
-                    <i class="fa-solid fa-user-tie course-icon"></i>
-                    <h3>Mentorship by Senior</h3>
-                    <div class="course-price">₹199</div>
-                    <p>Get personalized one-on-one guidance from experienced seniors to easily navigate academics and college life.</p>
-                    <button class="action-btn" onclick="buyCourse('Mentorship by Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                <h3 id="profileNameDisplay" style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary);">Student Name</h3>
+                
+                <div style="margin-bottom: 2rem; color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+                    <p><strong>Roll No:</strong> <span id="profileRollDisplay" style="color: var(--text-primary);">N/A</span></p>
+                    <p><strong>Course:</strong> <span id="profileCourseDisplay" style="color: var(--text-primary);">N/A</span></p>
                 </div>
-
-                <!-- Course 2 -->
-                <div class="glass course-card">
-                    <i class="fa-solid fa-chalkboard-user course-icon"></i>
-                    <h3>Guidance by Teacher Senior</h3>
-                    <div class="course-price">₹499</div>
-                    <p>Unlock advanced mentoring by highly experienced senior faculty members for deep technical insights and planning.</p>
-                    <button class="action-btn" onclick="buyCourse('Guidance by Teacher Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button onclick="switchView('dashboardView')" class="action-btn" style="flex: 1; background: rgba(255, 255, 255, 0.1); color: var(--text-primary); border: 1px solid var(--input-border); min-width: 140px;">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </button>
+                    <button onclick="logout()" class="action-btn" style="flex: 1; background: rgba(239, 68, 68, 0.1); color: var(--error-color); border: 1px solid rgba(239, 68, 68, 0.3); min-width: 140px;">
+                        Logout <i class="fa-solid fa-power-off"></i>
+                    </button>
                 </div>
-
-                <!-- Course 3 -->
-                <div class="glass course-card">
-                    <i class="fa-solid fa-briefcase course-icon"></i>
-                    <h3>Mentorship for Internship</h3>
-                    <div class="course-price">₹999</div>
-                    <p>Dedicated preparation for landing top-tier internships, complete with resume reviews and intense mock interviews.</p>
-                    <button class="action-btn" onclick="buyCourse('Mentorship for Internship')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
-                </div>
-
             </div>
         </div>
 
     </div>
 
-    <!-- Bottom spacer for balance -->
     <div class="spacer bottom"></div>
-
-    <!-- Added Footer -->
-    <div class="global-footer">
-        made by 😍
-    </div>
+    <div class="global-footer">Made by Love 😍</div>
 
     <script>
+        // ==========================================
+        // 🔗 OWNER LINKS CONFIGURATION 
+        // Replace the placeholders below with your actual links!
+        // ==========================================
+        const ownerLinks = {
+            quiz: "https://forms.gle/your-quiz-link",           // Replace with Quiz form link
+            roadmap: "https://drive.google.com/your-pdf-link",  // Replace with Roadmap PDF link
+            guidance: "https://yourwebsite.com/guidance",       // Replace with Guidance resource link
+            community: "https://chat.whatsapp.com/your-link"    // Replace with WhatsApp Group link
+        };
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwCPFIZwbrN0kqBIBjv7nGIP8Blg4Hvz9iwOYkDoOHWILyS6k927fOnJi_nhcvAo6d6/exec';
+        // ==========================================
+
+
         // --- THEME LOGIC ---
         const themeBtn = document.getElementById('themeBtn');
         const body = document.body;
         const themeIcon = themeBtn.querySelector('i');
-
         const currentTheme = localStorage.getItem('theme') || 'dark';
+        
         body.setAttribute('data-theme', currentTheme);
         updateThemeIcon(currentTheme);
 
@@ -620,91 +715,89 @@
             }
         }
 
-        // --- PROFILE DROPDOWN LOGIC ---
+        // --- NAVIGATION & LOGIC ---
         const profileToggleBtn = document.getElementById('profileToggleBtn');
-        const profileDropdown = document.getElementById('profileDropdown');
+        const loginToggleBtn = document.getElementById('loginToggleBtn');
 
-        profileToggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent document click from immediately closing it
-            profileDropdown.classList.toggle('show');
-        });
+        profileToggleBtn.addEventListener('click', () => switchView('profileView'));
+        loginToggleBtn.addEventListener('click', () => switchView('loginView'));
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!profileDropdown.contains(e.target) && !profileToggleBtn.contains(e.target)) {
-                profileDropdown.classList.remove('show');
-            }
-        });
-
-        // --- NAVIGATION LOGIC ---
         function switchView(viewId) {
-            // Hide all views
-            document.querySelectorAll('.view-section').forEach(el => {
-                el.classList.remove('active');
-            });
-            // Show target view
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
             
-            // Clear any alerts
-            document.getElementById('loginAlert').classList.remove('show');
-
-            // Expand container wrapper if going to the dashboard
             const container = document.getElementById('mainContainer');
             if(viewId === 'dashboardView') {
                 container.classList.add('dashboard-active');
             } else {
                 container.classList.remove('dashboard-active');
             }
-
-            // Scroll to top naturally
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showLoggedInState(user) {
-            // Update profile dropdown info
             document.getElementById('profileNameDisplay').innerText = user.name || user.email.split('@')[0];
             document.getElementById('profileRollDisplay').innerText = user.roll || 'N/A';
             document.getElementById('profileCourseDisplay').innerText = user.course || 'N/A';
-            document.getElementById('welcomeMessage').innerText = `Welcome back ${user.name || user.email.split('@')[0]}! Ready to level up?`;
             
-            // Show the profile button icon
+            const welcomeMsg = document.getElementById('welcomeMessage');
+            welcomeMsg.innerText = `Welcome back, ${user.name || user.email.split('@')[0]}!`;
+            welcomeMsg.style.display = 'block';
+            
             document.getElementById('profileToggleBtn').style.display = 'flex';
-            
+            document.getElementById('loginToggleBtn').style.display = 'none';
             switchView('dashboardView');
         }
 
         function logout() {
             localStorage.removeItem('courseAppUser');
             document.getElementById('loginEmail').value = '';
-            document.getElementById('profileToggleBtn').style.display = 'none'; // Hide profile icon
-            profileDropdown.classList.remove('show'); // Close dropdown
-            switchView('loginView');
+            document.getElementById('profileToggleBtn').style.display = 'none'; 
+            document.getElementById('loginToggleBtn').style.display = 'flex'; 
+            document.getElementById('welcomeMessage').style.display = 'none'; 
+            switchView('dashboardView');
         }
 
-        function buyCourse(courseName) {
+        // --- RESOURCE ACCESS LOGIC ---
+        function accessResource(resourceType) {
             const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = `Initiating secure payment for ${courseName}...`;
-            toast.classList.add('show');
+            const toastMsg = document.getElementById('toastMsg');
             
-            // Hide toast after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            // 1. Check if user is logged in
+            if (!localStorage.getItem('courseAppUser')) {
+                toastMsg.innerText = `Please login to access this resource.`;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    switchView('loginView');
+                }, 2000);
+                return;
+            }
+
+            // 2. Open the requested link
+            const targetUrl = ownerLinks[resourceType];
+            if (targetUrl) {
+                window.open(targetUrl, '_blank');
+            } else {
+                toastMsg.innerText = `Link coming soon!`;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            }
         }
 
         // Check login state on page load
         window.addEventListener('DOMContentLoaded', () => {
             const userStr = localStorage.getItem('courseAppUser');
             if (userStr) {
-                const user = JSON.parse(userStr);
-                showLoggedInState(user);
+                showLoggedInState(JSON.parse(userStr));
+            } else {
+                document.getElementById('loginToggleBtn').style.display = 'flex';
+                document.getElementById('profileToggleBtn').style.display = 'none';
             }
         });
 
-        // --- GOOGLE APPS SCRIPT URL ---
-        const scriptURL = 'https://script.google.com/macros/s/AKfycby9iO8xQQHhJSnRkcfaVDMwgJaa6TPeu6OjN1MlDSlN5vwUGS0Tnfdu1_XOUd--8MM/exec';
-
-        // --- LOGIN LOGIC ---
+        // --- LOGIN FORM LOGIC ---
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
         const loginAlert = document.getElementById('loginAlert');
@@ -719,29 +812,24 @@
             loginAlert.classList.remove('show');
 
             try {
-                // To perform a check, we append ?action=login&email=... to the URL
                 const response = await fetch(`${scriptURL}?action=login&email=${encodeURIComponent(email)}`);
                 const data = await response.json();
 
                 if (data.status === 'success' && data.exists === true) {
-                    // Email found! Save to localStorage and switch to dashboard
                     const userObj = {
                         email: email,
-                        name: data.name,     // Expecting name from backend
-                        roll: data.roll,     // Expecting roll from backend
-                        course: data.course  // Expecting course from backend
+                        name: data.name || data.studentName,
+                        roll: data.roll || data.rollNumber,
+                        course: data.course
                     };
                     localStorage.setItem('courseAppUser', JSON.stringify(userObj));
                     showLoggedInState(userObj);
                 } else {
-                    // Email not found
                     loginAlert.innerText = "Data not found in database. Please sign up first.";
                     loginAlert.classList.add('show');
                 }
             } catch (error) {
-                console.error("Login Error:", error);
-                // Important Fallback Message if Google Apps Script is not updated yet
-                loginAlert.innerHTML = "<b>Backend Error:</b> Ensure your Google Apps Script is updated to handle GET requests for logins.";
+                loginAlert.innerHTML = "<b>Backend Error:</b> Ensure your Google Apps Script is updated.";
                 loginAlert.classList.add('show');
             } finally {
                 loginBtn.innerHTML = originalBtnContent;
@@ -749,7 +837,7 @@
             }
         });
 
-        // --- SIGNUP LOGIC ---
+        // --- SIGNUP FORM LOGIC ---
         const signupForm = document.getElementById('enrollmentForm');
         const submitBtn = document.getElementById('submitBtn');
 
@@ -760,13 +848,12 @@
             submitBtn.innerHTML = 'Enrolling... <i class="fa-solid fa-spinner fa-spin"></i>';
             submitBtn.disabled = true;
             
-            // Convert FormData to URLSearchParams for better Google Apps Script compatibility
             fetch(scriptURL, { 
                 method: 'POST', 
                 body: new URLSearchParams(new FormData(signupForm)), 
                 mode: 'no-cors' 
             })
-            .then(response => {
+            .then(() => {
                 submitBtn.innerHTML = 'Registered! <i class="fa-solid fa-check-circle"></i>';
                 submitBtn.style.background = 'var(--success-color)';
                 submitBtn.style.color = '#111827';
@@ -778,16 +865,13 @@
                     submitBtn.disabled = false;
                     
                     signupForm.reset();
-                    // Auto-switch to login page after successful registration
                     switchView('loginView');
-                    
                 }, 3000);
             })
             .catch(error => {
                 submitBtn.innerHTML = 'Error! <i class="fa-solid fa-triangle-exclamation"></i>';
                 submitBtn.style.background = 'var(--error-color)'; 
                 submitBtn.style.color = '#fff';
-                console.error('Submission Error:', error);
                 
                 setTimeout(() => {
                     submitBtn.innerHTML = originalBtnContent;
