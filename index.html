@@ -146,7 +146,6 @@
 
         /* --- NEW LAUNCHPAD DASHBOARD DESIGN --- */
         
-        /* Hero Section */
         .hero-section {
             display: flex;
             align-items: center;
@@ -192,7 +191,6 @@
             100% { transform: translateY(0px); }
         }
 
-        /* Launchpad Feature Cards */
         .launchpad-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -257,7 +255,6 @@
         .btn-indigo { background: var(--launch-indigo); }
         .btn-blue { background: var(--launch-blue); }
 
-        /* Section Titles */
         .section-header {
             display: flex;
             align-items: center;
@@ -276,7 +273,6 @@
             flex: 0 1 50px;
         }
 
-        /* How It Works Section */
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -314,105 +310,62 @@
             font-size: 0.95rem;
         }
 
-        /* --- TESTIMONIAL CAROUSEL SLIDER (UPDATED) --- */
-        /* --- TESTIMONIAL CAROUSEL SLIDER (UPDATED) --- */
-.carousel-container {
-    position: relative;
-    max-width: 600px; /* Slightly narrower to give arrows room to breathe */
-    margin: 0 auto 3rem auto;
-    /* Removed padding so the glass card sits flush inside */
-}
+        /* --- TESTIMONIAL CAROUSEL SLIDER --- */
+        .carousel-container {
+            position: relative;
+            max-width: 600px; 
+            margin: 0 auto 3rem auto;
+        }
 
-.testimonial-slider-wrapper {
-    overflow: hidden;
-    border-radius: 20px;
-    width: 100%;
-}
+        .testimonial-slider-wrapper {
+            overflow: hidden;
+            border-radius: 20px;
+            width: 100%;
+        }
 
-.testimonial-track {
-    display: flex;
-    width: 100%;
-}
+        .testimonial-track {
+            display: flex;
+            width: 100%;
+        }
 
-.testimonial-card {
-    min-width: 100%; 
-    padding: 2.5rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    box-sizing: border-box;
-}
+        .testimonial-card {
+            min-width: 100%; 
+            padding: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-sizing: border-box;
+        }
 
-/* Updated for Images */
-.testimonial-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid var(--launch-blue); /* Optional: adds a nice border ring */
-    overflow: hidden; /* Crucial: crops the image into a perfect circle */
-    flex-shrink: 0;
-    background: var(--glass-bg);
-}
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--launch-blue); 
+            overflow: hidden; 
+            flex-shrink: 0;
+            background: var(--glass-bg);
+        }
 
-.testimonial-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Prevents the image from stretching */
-}
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.testimonial-content p.quote {
-    font-size: 1.2rem;
-    font-style: italic;
-    font-weight: 600;
-    margin-bottom: 0.8rem;
-    line-height: 1.4;
-}
-.testimonial-content p.author {
-    color: var(--launch-orange);
-    font-weight: 700;
-    font-size: 0.95rem;
-}
+        .testimonial-content p.quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+        .testimonial-content p.author {
+            color: var(--launch-orange);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
 
-/* Carousel Navigation Buttons */
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: var(--text-primary);
-    color: var(--bg-gradient-1);
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px var(--shadow-color);
-    transition: all 0.3s ease;
-}
-.carousel-btn:hover {
-    transform: translateY(-50%) scale(1.1);
-    background: var(--launch-blue);
-    color: white;
-}
-
-/* Half of 45px is 22.5px - this pulls them exactly halfway out */
-#prevBtn { left: -22.5px; }
-#nextBtn { right: -22.5px; }
-
-/* Update Mobile Media Query for the Arrows */
-@media (max-width: 768px) {
-    .carousel-container { 
-        max-width: calc(100% - 45px); /* Prevents arrows from overflowing screen edge */
-    }
-    #prevBtn { left: -18px; }
-    #nextBtn { right: -18px; }
-}
-
-        /* Carousel Navigation Buttons */
         .carousel-btn {
             position: absolute;
             top: 50%;
@@ -437,8 +390,9 @@
             background: var(--launch-blue);
             color: white;
         }
-        #prevBtn { left: -10px; }
-        #nextBtn { right: -10px; }
+
+        #prevBtn { left: -22.5px; }
+        #nextBtn { right: -22.5px; }
 
 
         /* --- EXISTING FORM CSS --- */
@@ -513,9 +467,11 @@
             .testimonial-card { flex-direction: column; text-align: center; padding: 1.5rem; gap: 1rem; }
             .launchpad-grid { grid-template-columns: 1fr; }
             
-            .carousel-container { padding: 0 10px; }
-            #prevBtn { left: -5px; }
-            #nextBtn { right: -5px; }
+            .carousel-container { 
+                max-width: calc(100% - 45px); 
+            }
+            #prevBtn { left: -18px; }
+            #nextBtn { right: -18px; }
             .carousel-btn { width: 35px; height: 35px; font-size: 1rem; }
         }
     </style>
@@ -540,9 +496,9 @@
 
     <div class="spacer"></div>
 
-    <div class="container dashboard-active" id="mainContainer">
+    <div class="container" id="mainContainer">
         
-        <div id="loginView" class="view-section">
+        <div id="loginView" class="view-section active">
             <div class="header">
                 <h1>Welcome Back</h1>
                 <p>Login to access your personalized launchpad.</p>
@@ -631,7 +587,7 @@
             </div>
         </div>
 
-        <div id="dashboardView" class="view-section active">
+        <div id="dashboardView" class="view-section">
             
             <div class="hero-section glass">
                 <div class="hero-text">
@@ -706,71 +662,71 @@
                 <p style="color: var(--text-secondary);">From Freshers to Interns!</p>
             </div>
 
-           <div class="carousel-container">
-    <button id="prevBtn" class="carousel-btn" aria-label="Previous Story">
-        <i class="fa-solid fa-chevron-left"></i>
-    </button>
-    
-    <div class="glass testimonial-slider-wrapper">
-        <div class="testimonial-track" id="testimonialTrack">
-            
-            <div class="testimonial-card">
-                <div class="testimonial-avatar">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Rahul">
+            <div class="carousel-container">
+                <button id="prevBtn" class="carousel-btn" aria-label="Previous Story">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                
+                <div class="glass testimonial-slider-wrapper">
+                    <div class="testimonial-track" id="testimonialTrack">
+                        
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://i.pravatar.cc/150?img=11" alt="Rahul">
+                            </div>
+                            <div class="testimonial-content">
+                                <p class="quote">“Following these roadmaps helped me land my first tech internship in just 3 months! The community support is unmatched.”</p>
+                                <p class="author">- Rahul, CSE Student</p>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://i.pravatar.cc/150?img=5" alt="Priya">
+                            </div>
+                            <div class="testimonial-content">
+                                <p class="quote">“I switched from core engineering to Web Dev. The guided projects gave me the confidence to build a full-stack app!”</p>
+                                <p class="author">- Priya, IT Student</p>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://i.pravatar.cc/150?img=12" alt="Amit">
+                            </div>
+                            <div class="testimonial-content">
+                                <p class="quote">“The DSA resources are top-notch. I successfully cleared my technical rounds for a major tech company!”</p>
+                                <p class="author">- Amit, CSE Student</p>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://i.pravatar.cc/150?img=9" alt="Sneha">
+                            </div>
+                            <div class="testimonial-content">
+                                <p class="quote">“I found amazing teammates for a hackathon through the community group. We ended up winning 2nd place!”</p>
+                                <p class="author">- Sneha, ECE Student</p>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="testimonial-avatar">
+                                <img src="https://i.pravatar.cc/150?img=14" alt="Rohan">
+                            </div>
+                            <div class="testimonial-content">
+                                <p class="quote">“Went from knowing nothing about Artificial Intelligence to building my own functional NLP chatbot.”</p>
+                                <p class="author">- Rohan, CSE Student</p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="testimonial-content">
-                    <p class="quote">“Following these roadmaps helped me land my first tech internship in just 3 months! The community support is unmatched.”</p>
-                    <p class="author">- Rahul, CSE Student</p>
-                </div>
+
+                <button id="nextBtn" class="carousel-btn" aria-label="Next Story">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
             </div>
-
-            <div class="testimonial-card">
-                <div class="testimonial-avatar">
-                    <img src="https://i.pravatar.cc/150?img=5" alt="Priya">
-                </div>
-                <div class="testimonial-content">
-                    <p class="quote">“I switched from core engineering to Web Dev. The guided projects gave me the confidence to build a full-stack app!”</p>
-                    <p class="author">- Priya, IT Student</p>
-                </div>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="testimonial-avatar">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Amit">
-                </div>
-                <div class="testimonial-content">
-                    <p class="quote">“The DSA resources are top-notch. I successfully cleared my technical rounds for a major tech company!”</p>
-                    <p class="author">- Amit, CSE Student</p>
-                </div>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="testimonial-avatar">
-                    <img src="https://i.pravatar.cc/150?img=9" alt="Sneha">
-                </div>
-                <div class="testimonial-content">
-                    <p class="quote">“I found amazing teammates for a hackathon through the community group. We ended up winning 2nd place!”</p>
-                    <p class="author">- Sneha, ECE Student</p>
-                </div>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="testimonial-avatar">
-                    <img src="https://i.pravatar.cc/150?img=14" alt="Rohan">
-                </div>
-                <div class="testimonial-content">
-                    <p class="quote">“Went from knowing nothing about Artificial Intelligence to building my own functional NLP chatbot.”</p>
-                    <p class="author">- Rohan, CSE Student</p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <button id="nextBtn" class="carousel-btn" aria-label="Next Story">
-        <i class="fa-solid fa-chevron-right"></i>
-    </button>
-</div>
 
         </div>
 
@@ -818,7 +774,8 @@
             community: "https://chat.whatsapp.com/your-link"
         };
 
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwCPFIZwbrN0kqBIBjv7nGIP8Blg4Hvz9iwOYkDoOHWILyS6k927fOnJi_nhcvAo6d6/exec';
+        // MAKE SURE TO PASTE YOUR NEW WEB APP URL HERE
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwxZBHmYMmAUIFpcywmJVnuo2MBmyMckk24OiXjYLEuBkGPSwymjJ_iM4S9v-xIjlWr/exec';
 
         // --- THEME LOGIC ---
         const themeBtn = document.getElementById('themeBtn');
@@ -850,7 +807,9 @@
         const profileToggleBtn = document.getElementById('profileToggleBtn');
         const loginToggleBtn = document.getElementById('loginToggleBtn');
 
-        profileToggleBtn.addEventListener('click', () => switchView('profileView'));
+        profileToggleBtn.addEventListener('click', () => {
+            if (localStorage.getItem('courseAppUser')) switchView('profileView');
+        });
         loginToggleBtn.addEventListener('click', () => switchView('loginView'));
 
         function switchView(viewId) {
@@ -886,8 +845,21 @@
             document.getElementById('profileToggleBtn').style.display = 'none'; 
             document.getElementById('loginToggleBtn').style.display = 'flex'; 
             document.getElementById('welcomeMessage').style.display = 'none'; 
-            switchView('dashboardView');
+            switchView('loginView');
         }
+
+        // CHECK LOGIN STATE ON LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            const userStr = localStorage.getItem('courseAppUser');
+            if (userStr) {
+                showLoggedInState(JSON.parse(userStr));
+            } else {
+                // Force user back to login page if they reload
+                document.getElementById('loginToggleBtn').style.display = 'flex';
+                document.getElementById('profileToggleBtn').style.display = 'none';
+                switchView('loginView');
+            }
+        });
 
         // --- RESOURCE ACCESS LOGIC ---
         function accessResource(resourceType) {
@@ -915,16 +887,6 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const userStr = localStorage.getItem('courseAppUser');
-            if (userStr) {
-                showLoggedInState(JSON.parse(userStr));
-            } else {
-                document.getElementById('loginToggleBtn').style.display = 'flex';
-                document.getElementById('profileToggleBtn').style.display = 'none';
-            }
-        });
-
         // --- INFINITE TESTIMONIAL CAROUSEL LOGIC ---
         const track = document.getElementById('testimonialTrack');
         const prevBtn = document.getElementById('prevBtn');
@@ -948,23 +910,18 @@
             isTransitioning = true;
             isNextAction = false;
             
-            // Instantly move the last element to the front
             track.prepend(track.lastElementChild);
-            // Instantly offset the track so it looks like it hasn't moved
             track.style.transition = 'none';
             track.style.transform = 'translateX(-100%)';
             
-            // Force a browser reflow so it registers the lack of transition
             void track.offsetWidth; 
             
-            // Slide it back to 0
             track.style.transition = 'transform 0.5s ease-in-out';
             track.style.transform = 'translateX(0)';
         }
 
         track.addEventListener('transitionend', () => {
             if (isNextAction) {
-                // Instantly move the first element to the back and reset offset
                 track.style.transition = 'none';
                 track.appendChild(track.firstElementChild);
                 track.style.transform = 'translateX(0)';
@@ -991,7 +948,6 @@
             startAutoPlay();
         }
 
-        // Start the carousel automatically
         startAutoPlay();
 
 
