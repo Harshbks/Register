@@ -3,58 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Course Enrollment Portal</title>
+    <title>Internship Mentorship Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- SHARED THEME VARIABLES --- */
+        /* --- PROFESSIONAL THEME VARIABLES --- */
         :root {
-            --bg-gradient-1: #1a1c2c;
-            --bg-gradient-2: #4a192c;
-            --bg-gradient-3: #0f2027;
-            --bg-gradient-4: #2c5364;
-            --glass-bg: rgba(30, 30, 40, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --input-border: rgba(255, 255, 255, 0.3);
-            --shadow-color: rgba(0, 0, 0, 0.25);
-            --success-color: #4ade80;
+            /* Dark Professional Theme (Default) */
+            --bg-gradient-1: #0f172a; /* Slate 900 */
+            --bg-gradient-2: #1e1b4b; /* Indigo 950 */
+            --glass-bg: rgba(30, 41, 59, 0.85); /* Slate 800 */
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --input-border: rgba(255, 255, 255, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --success-color: #3b82f6; /* Professional Blue instead of loud green */
             --error-color: #ef4444;
             --card-bg: rgba(255, 255, 255, 0.03);
             --select-bg: #1e293b;
             --link-color: #60a5fa;
+            --btn-bg: #2563eb;
+            --btn-text: #ffffff;
         }
 
         [data-theme="light"] {
-            --bg-gradient-1: #8EC5FC;
-            --bg-gradient-2: #E0C3FC;
-            --bg-gradient-3: #ffffff;
-            --bg-gradient-4: #D9AFD9;
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.6);
-            --text-primary: #111827;
-            --text-secondary: #4b5563;
-            --input-border: #94a3b8;
-            --shadow-color: rgba(0, 0, 0, 0.08);
-            --card-bg: rgba(255, 255, 255, 0.4);
+            /* Light Corporate Theme */
+            --bg-gradient-1: #f1f5f9; /* Slate 100 */
+            --bg-gradient-2: #e2e8f0; /* Slate 200 */
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --input-border: #cbd5e1;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --card-bg: rgba(255, 255, 255, 0.6);
             --select-bg: #ffffff;
             --link-color: #2563eb;
+            --btn-bg: #0f172a;
+            --btn-text: #ffffff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Full Screen & Safe Scroll Body */
         html { scroll-behavior: smooth; }
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -62,73 +61,66 @@
             padding: 0 1rem;
             position: relative;
             overflow-x: hidden;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            transition: background 0.5s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.9) translateY(-10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* Spacers securely push the form to the center, avoiding top cut-offs! */
         .spacer {
             flex-grow: 1;
-            min-height: 6rem; /* Guarantees safe spacing below the top icons */
+            min-height: 5rem;
             flex-shrink: 0;
         }
-        .spacer.bottom {
-            min-height: 3rem; /* Bottom breathing room */
-        }
+        .spacer.bottom { min-height: 3rem; }
 
         .container {
             width: 100%;
-            max-width: 550px;
-            margin: 0 auto; /* Horizontal center only. Vertical uses spacers. */
+            max-width: 500px;
+            margin: 0 auto;
             position: relative;
             z-index: 1;
             transition: max-width 0.5s ease;
-            flex-shrink: 0; /* Prevents form from compressing */
+            flex-shrink: 0;
         }
 
-        /* Expands the container specifically for the dashboard grid */
-        .container.dashboard-active {
-            max-width: 1000px;
-        }
+        .container.dashboard-active { max-width: 1100px; }
 
         .view-section {
             display: none; 
-            animation: fadeIn 0.4s ease-out forwards;
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .view-section.active {
-            display: block; 
-        }
+        .view-section.active { display: block; }
 
         .glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px var(--shadow-color);
-            border-radius: 24px;
+            box-shadow: 0 10px 40px var(--shadow-color);
+            border-radius: 20px;
         }
 
-        /* Header */
+        /* --- HEADER & TYPOGRAPHY --- */
         .header { text-align: center; margin-bottom: 2.5rem; }
-        .header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .header p { font-size: 1rem; color: var(--text-secondary); line-height: 1.5; }
+        .header h1 { 
+            font-size: 2.2rem; 
+            font-weight: 700; 
+            margin-bottom: 0.75rem; 
+            letter-spacing: -0.5px;
+        }
+        .header p { 
+            font-size: 1.05rem; 
+            color: var(--text-secondary); 
+            line-height: 1.6; 
+            max-width: 80%;
+            margin: 0 auto;
+        }
 
-        /* Top Right Icons Container - Absolute to Document (Scrolls naturally) */
+        /* --- TOP ICONS --- */
         .top-right-actions {
             position: absolute;
             top: 1.5rem;
@@ -139,96 +131,38 @@
         }
 
         .theme-toggle, .profile-toggle {
-            width: 48px; height: 48px; border-radius: 50%;
+            width: 45px; height: 45px; border-radius: 50%;
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-primary);
             box-shadow: 0 4px 12px var(--shadow-color);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
-        
         .profile-toggle { display: none; } 
 
         .theme-toggle:hover, .profile-toggle:hover { 
-            transform: scale(1.1); 
+            transform: translateY(-2px); 
             box-shadow: 0 6px 16px var(--shadow-color);
-        }
-
-        /* Profile Dropdown Container */
-        .profile-dropdown {
-            position: absolute;
-            top: 5rem;
-            right: 1.5rem;
-            width: 260px;
-            padding: 1.5rem;
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            z-index: 1000;
-            border-radius: 20px;
-            text-align: center;
-        }
-
-        .profile-dropdown.show {
-            display: flex;
-            animation: scaleIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-        }
-
-        .profile-avatar-small {
-            width: 60px;
-            height: 60px;
-            background: rgba(96, 165, 250, 0.15);
             color: var(--link-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
         }
 
-        .profile-dropdown h3 { font-size: 1.2rem; margin: 0 0 0.5rem 0; color: var(--text-primary); }
-        .profile-dropdown p { color: var(--text-secondary); margin: 0.2rem 0; font-size: 0.9rem; }
-        .profile-dropdown span { font-weight: 700; color: var(--success-color); }
-        
-        .logout-dash-btn {
-            margin-top: 1.2rem;
-            width: 100%;
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error-color);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 10px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
+        /* --- FORM STYLING --- */
+        .form-card { padding: 3rem 2.5rem; }
+
+        .input-box { position: relative; margin-bottom: 30px; margin-top: 10px; }
+        .input-box i { 
+            position: absolute; left: 0; top: 12px; 
+            color: var(--text-secondary); font-size: 1.1rem; transition: 0.3s; 
         }
-
-        .logout-dash-btn:hover {
-            background: var(--error-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        /* Form Layout */
-        .form-card { padding: 2.5rem 2rem; }
-
-        /* --- FLOATING INPUT FIELDS --- */
-        .input-box { position: relative; margin-bottom: 35px; margin-top: 10px; }
-        .input-box i { position: absolute; left: 0; top: 12px; color: var(--text-secondary); font-size: 1.2rem; transition: 0.3s; }
         
         .input-box input, .input-box select {
-            width: 100%; padding: 10px 10px 10px 35px; background: transparent; border: none; outline: none;
-            border-bottom: 2px solid var(--input-border); color: var(--text-primary); font-size: 1rem; letter-spacing: 0.5px; transition: 0.5s;
+            width: 100%; padding: 10px 10px 10px 32px; 
+            background: transparent; border: none; outline: none;
+            border-bottom: 1.5px solid var(--input-border); 
+            color: var(--text-primary); font-size: 1rem; transition: 0.3s;
             border-radius: 0; box-shadow: none; font-family: 'Inter', sans-serif;
         }
 
@@ -236,211 +170,176 @@
         .input-box select option { background: var(--select-bg); color: var(--text-primary); }
         
         .input-box label {
-            position: absolute; left: 35px; top: 10px; color: var(--text-secondary);
-            pointer-events: none; transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); font-size: 1rem; font-weight: 500;
+            position: absolute; left: 32px; top: 10px; color: var(--text-secondary);
+            pointer-events: none; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); font-size: 0.95rem;
         }
 
-        /* Add red asterisk for required fields */
         .input-box input:required ~ label::after,
         .input-box select:required ~ label::after {
-            content: " *";
-            color: var(--error-color);
+            content: " *"; color: var(--error-color);
         }
 
-        /* Floating Label Logic */
         .input-box input:focus ~ label, 
         .input-box input:not(:placeholder-shown) ~ label, 
         .input-box select:focus ~ label, 
         .input-box select:valid ~ label {
-            top: -22px; left: 0; color: var(--success-color); font-size: 0.85rem; font-weight: 600;
+            top: -20px; left: 0; color: var(--success-color); font-size: 0.8rem; font-weight: 600;
         }
         
-        .input-box input:focus, .input-box select:focus { border-bottom: 2px solid var(--success-color); }
+        .input-box input:focus, .input-box select:focus { border-bottom: 1.5px solid var(--success-color); }
         .input-box input:focus ~ i, .input-box select:focus ~ i { color: var(--success-color); }
 
-        /* Buttons & Links */
+        /* --- BUTTONS --- */
         button[type="submit"], .action-btn {
             width: 100%; padding: 14px; 
-            background: var(--text-primary); 
-            color: var(--bg-gradient-1); 
-            border: none; border-radius: 12px;
-            font-size: 1.1rem; font-weight: 700; cursor: pointer; 
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 15px var(--shadow-color);
+            background: var(--btn-bg); 
+            color: var(--btn-text); 
+            border: none; border-radius: 10px;
+            font-size: 1.05rem; font-weight: 600; cursor: pointer; 
+            transition: all 0.2s ease; 
             display: flex; justify-content: center; align-items: center; gap: 8px;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
         button[type="submit"]:hover, .action-btn:hover { 
             transform: translateY(-2px); 
-            box-shadow: 0 8px 25px var(--shadow-color); 
-            opacity: 0.9;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3); 
         }
-        button[type="submit"]:active, .action-btn:active { transform: translateY(1px); }
         button[type="submit"]:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .form-footer {
-            margin-top: 1.5rem;
-            text-align: center;
-            font-size: 0.95rem;
+        .btn-outline {
+            background: transparent !important;
+            border: 1.5px solid var(--input-border) !important;
+            color: var(--text-primary) !important;
+            box-shadow: none !important;
+        }
+        .btn-outline:hover {
+            border-color: var(--text-primary) !important;
+            background: rgba(255,255,255,0.05) !important;
         }
 
-        .form-footer a {
-            color: var(--link-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: 0.2s;
-            cursor: pointer;
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1) !important;
+            color: var(--error-color) !important;
+            border: 1.5px solid rgba(239, 68, 68, 0.3) !important;
         }
+        .btn-danger:hover {
+            background: var(--error-color) !important;
+            color: white !important;
+        }
+
+        .form-footer { margin-top: 1.5rem; text-align: center; font-size: 0.95rem; color: var(--text-secondary); }
+        .form-footer a { color: var(--link-color); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .form-footer a:hover { text-decoration: underline; }
 
-        /* Error/Alert box */
+        /* --- ALERTS & TOASTS --- */
         .alert-box {
-            display: none;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--error-color);
-            color: var(--error-color);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.9rem;
+            display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error-color);
+            color: var(--error-color); padding: 12px; border-radius: 8px; margin-bottom: 20px;
+            text-align: center; font-weight: 500; font-size: 0.9rem;
         }
-
         .alert-box.show { display: block; animation: fadeIn 0.3s; }
 
-        /* Dashboard specific - Grid and Cards */
+        .toast {
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--text-primary); color: var(--bg-gradient-1);
+            padding: 15px 25px; border-radius: 10px; font-weight: 600;
+            box-shadow: 0 8px 20px var(--shadow-color);
+            transform: translateY(100px); opacity: 0; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 2000; display: flex; align-items: center; gap: 10px;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* --- DASHBOARD GRID --- */
         .course-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-top: 2.5rem; /* Space between header and cards */
+            margin-top: 2rem;
         }
 
         .course-card {
-            padding: 2.5rem 2rem;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 2.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            border-top: 4px solid var(--success-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        .course-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px var(--shadow-color); }
+        
+        .course-icon { font-size: 2.5rem; color: var(--success-color); margin-bottom: 1.5rem; }
+        .course-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .course-price { font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin: 0.5rem 0 1rem; }
+        .course-card p { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6; flex-grow: 1; }
 
-        .course-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px var(--shadow-color);
-        }
-
-        .course-icon {
-            font-size: 3.5rem;
-            color: var(--link-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .course-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .course-price {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--success-color);
-            margin: 1rem 0;
-        }
-
-        .course-card p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            flex-grow: 1;
-        }
-
-        /* Custom Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--text-primary);
-            color: var(--bg-gradient-1);
-            padding: 15px 25px;
-            border-radius: 12px;
-            font-weight: 600;
-            box-shadow: 0 8px 20px var(--shadow-color);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Global Footer */
-        .global-footer {
-            padding: 1.5rem 0;
+        /* --- PROFILE VIEW (NEW) --- */
+        .profile-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 3rem;
             text-align: center;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            flex-shrink: 0;
+        }
+        
+        .profile-avatar {
+            width: 90px; height: 90px;
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--success-color);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem auto;
+            border: 2px solid rgba(59, 130, 246, 0.3);
         }
 
-        /* Responsive Mobile Adjustments */
+        .profile-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .profile-email { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1rem; }
+
+        .profile-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            text-align: left;
+            margin-bottom: 2.5rem;
+            background: rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+        [data-theme="light"] .profile-details-grid { background: rgba(0,0,0,0.03); }
+
+        .detail-item p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .detail-item h4 { font-size: 1.1rem; color: var(--text-primary); font-weight: 500; }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            flex-direction: column;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .course-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .top-right-actions { top: 1rem; right: 1rem; gap: 0.5rem; }
-            .profile-dropdown { top: 4.5rem; right: 1rem; padding: 1.25rem; width: 240px; }
-            .header h1 { font-size: 1.8rem; }
+            .course-grid { grid-template-columns: 1fr; }
+            .profile-details-grid { grid-template-columns: 1fr; gap: 1rem;}
         }
-
         @media (max-width: 500px) {
-            .form-card { padding: 2rem 1.5rem; }
-            .course-card { padding: 2rem 1.5rem; }
-            .theme-toggle, .profile-toggle { width: 42px; height: 42px; font-size: 1.2rem; }
+            .form-card, .profile-container { padding: 2rem 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Container for dynamic top-right icons (Absolute to Document - Will scroll normally) -->
+    <!-- Top Right Actions -->
     <div class="top-right-actions">
-        <button class="theme-toggle" id="themeBtn" aria-label="Toggle Theme" title="Toggle Theme">
+        <button class="theme-toggle" id="themeBtn" title="Toggle Theme">
             <i class="fas fa-moon"></i>
         </button>
-
-        <button class="profile-toggle" id="profileToggleBtn" aria-label="Toggle Profile" title="View Profile">
+        <button class="profile-toggle" id="profileToggleBtn" title="View Profile">
             <i class="fa-solid fa-user"></i>
         </button>
     </div>
 
-    <!-- Dropdown for Student Profile -->
-    <div class="profile-dropdown glass" id="profileDropdown">
-        <div class="profile-avatar-small">
-            <i class="fa-solid fa-user-graduate"></i>
-        </div>
-        <h3 id="profileNameDisplay">Student Name</h3>
-        <p>Roll No: <span id="profileRollDisplay" style="color: var(--text-primary);">N/A</span></p>
-        <p>Course: <span id="profileCourseDisplay">N/A</span></p>
-        
-        <button onclick="logout()" class="logout-dash-btn">
-            Logout <i class="fa-solid fa-power-off"></i>
-        </button>
-    </div>
-
-    <!-- Toast Notification for Buys (Fixed so it overlaps) -->
     <div id="toast" class="toast">
         <i class="fa-solid fa-circle-notch fa-spin"></i> <span id="toastMsg">Processing...</span>
     </div>
 
-    <!-- Top spacer to perfectly balance the container and prevent icon overlap -->
     <div class="spacer"></div>
 
     <div class="container" id="mainContainer">
@@ -448,23 +347,23 @@
         <!-- ================= LOGIN VIEW ================= -->
         <div id="loginView" class="view-section active">
             <div class="header">
-                <h1>Welcome Back</h1>
-                <p>Login to access your course dashboard.</p>
+                <h1>Mentorship Portal</h1>
+                <p>Sign in to access exclusive guidance from top seniors and faculty members.</p>
             </div>
             
-            <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
+            <div class="glass form-card">
                 <div id="loginAlert" class="alert-box"></div>
                 <form id="loginForm">
                     <div class="input-box">
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="loginEmail" required autocomplete="email" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
+                        <input type="email" id="loginEmail" required autocomplete="email" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$">
                         <label for="loginEmail">Registered Student Mail ID</label>
                     </div>
                     
-                    <button type="submit" id="loginBtn">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+                    <button type="submit" id="loginBtn">Access Dashboard <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
                     
                     <div class="form-footer">
-                        Don't have an account? <a onclick="switchView('signupView')">Sign Up</a>
+                        New student? <a onclick="switchView('signupView')">Apply for Mentorship</a>
                     </div>
                 </form>
             </div>
@@ -473,53 +372,53 @@
         <!-- ================= SIGN UP VIEW ================= -->
         <div id="signupView" class="view-section">
             <div class="header">
-                <h1>Course Enrollment</h1>
-                <p>Fill out the details to enroll as a new student.</p>
+                <h1>Student Registration</h1>
+                <p>Fill out your academic details to join the mentorship network.</p>
             </div>
 
-            <div class="glass form-card" style="max-width: 550px; margin: 0 auto;">
+            <div class="glass form-card">
                 <form id="enrollmentForm">
                     
                     <div class="input-box">
                         <i class="fa-solid fa-user"></i>
                         <input type="text" id="studentName" name="studentName" required autocomplete="off" placeholder=" ">
-                        <label for="studentName">Full Name</label>
+                        <label for="studentName">Full Legal Name</label>
                     </div>
 
                     <div class="input-box">
                         <i class="fa-solid fa-id-card"></i>
                         <input type="text" id="rollNumber" name="rollNumber" required autocomplete="off" placeholder=" ">
-                        <label for="rollNumber">Roll Number</label>
+                        <label for="rollNumber">University Roll Number</label>
                     </div>
 
                     <div class="input-box">
                         <i class="fa-solid fa-envelope"></i>
-                        <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$" title="Please enter a valid @gmail.com or @kiit.ac.in email address">
-                        <label for="studentMail">Student Mail ID</label>
+                        <input type="email" id="studentMail" name="studentMail" required autocomplete="off" placeholder=" " pattern=".*@(gmail\.com|kiit\.ac\.in)$">
+                        <label for="studentMail">University Mail ID (@kiit.ac.in)</label>
                     </div>
                     
                     <div class="input-box">
                         <i class="fa-solid fa-phone"></i>
                         <input type="tel" id="phoneNumber" name="phoneNumber" required autocomplete="off" placeholder=" ">
-                        <label for="phoneNumber">Phone Number</label>
+                        <label for="phoneNumber">Contact Number</label>
                     </div>
 
                     <div class="input-box">
                         <i class="fa-solid fa-building-columns"></i>
                         <input type="text" id="branch" name="branch" required autocomplete="off" placeholder=" ">
-                        <label for="branch">Branch</label>
+                        <label for="branch">Academic Branch (e.g., CSE, IT)</label>
                     </div>
 
                     <div class="input-box">
                         <i class="fa-solid fa-laptop-code"></i>
                         <select id="course" name="course" required>
                             <option value="" hidden></option> 
-                            <option value="DSA">DSA</option>
-                            <option value="Web Development">Web Development</option>
-                            <option value="AI & ML">AI & ML</option>
-                            <option value="DBMS">DBMS</option>
+                            <option value="DSA & Competitive Programming">DSA & Competitive Programming</option>
+                            <option value="Full Stack Web Development">Full Stack Web Development</option>
+                            <option value="AI & Machine Learning">AI & Machine Learning</option>
+                            <option value="Cloud & DevOps">Cloud & DevOps</option>
                         </select>
-                        <label for="course">Course to Enroll</label>
+                        <label for="course">Area of Interest</label>
                     </div>
 
                     <div class="input-box">
@@ -530,76 +429,111 @@
                             <option value="2nd Semester">2nd Semester</option>
                             <option value="3rd Semester">3rd Semester</option>
                             <option value="4th Semester">4th Semester</option>
+                            <option value="5th Semester">5th Semester</option>
+                            <option value="6th Semester">6th Semester</option>
                         </select>
                         <label for="semester">Current Semester</label>
                     </div>
 
-                    <button type="submit" id="submitBtn">Submit Registration <i class="fa-solid fa-paper-plane"></i></button>
+                    <button type="submit" id="submitBtn">Submit Application <i class="fa-solid fa-paper-plane"></i></button>
 
                     <div class="form-footer">
-                        Already registered? <a onclick="switchView('loginView')">Login here</a>
+                        Already have an account? <a onclick="switchView('loginView')">Sign in here</a>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- ================= DASHBOARD VIEW (LOGGED IN) ================= -->
+        <!-- ================= DASHBOARD VIEW ================= -->
         <div id="dashboardView" class="view-section">
-            
             <div class="header">
-                <h1>Premium Programs</h1>
-                <p id="welcomeMessage">Level up your skills today.</p>
+                <h1>Mentorship Tracks</h1>
+                <p id="welcomeMessage">Select a guidance program to accelerate your career.</p>
             </div>
             
             <div class="course-grid">
                 
-                <!-- Course 1 -->
                 <div class="glass course-card">
-                    <i class="fa-solid fa-user-tie course-icon"></i>
-                    <h3>Mentorship by Senior</h3>
-                    <div class="course-price">₹199</div>
-                    <p>Get personalized one-on-one guidance from experienced seniors to easily navigate academics and college life.</p>
-                    <button class="action-btn" onclick="buyCourse('Mentorship by Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                    <i class="fa-solid fa-user-group course-icon"></i>
+                    <h3>Peer-to-Peer Mentorship</h3>
+                    <div class="course-price">Free</div>
+                    <p>Connect with immediate seniors to understand campus culture, manage academics, and get basic project guidance.</p>
+                    <button class="action-btn" onclick="buyCourse('Peer Mentorship')">Enroll Now <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
 
-                <!-- Course 2 -->
-                <div class="glass course-card">
-                    <i class="fa-solid fa-chalkboard-user course-icon"></i>
-                    <h3>Guidance by Teacher Senior</h3>
+                <div class="glass course-card" style="border-top-color: #8b5cf6;">
+                    <i class="fa-solid fa-chalkboard-user course-icon" style="color: #8b5cf6;"></i>
+                    <h3>Faculty & Industry Guidance</h3>
                     <div class="course-price">₹499</div>
-                    <p>Unlock advanced mentoring by highly experienced senior faculty members for deep technical insights and planning.</p>
-                    <button class="action-btn" onclick="buyCourse('Guidance by Teacher Senior')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                    <p>Get profound insights, deep technical architecture reviews, and long-term career planning from experienced faculty.</p>
+                    <button class="action-btn" style="background: #8b5cf6;" onclick="buyCourse('Faculty Guidance')">Apply Now <i class="fa-solid fa-briefcase"></i></button>
                 </div>
 
-                <!-- Course 3 -->
-                <div class="glass course-card">
-                    <i class="fa-solid fa-briefcase course-icon"></i>
-                    <h3>Mentorship for Internship</h3>
+                <div class="glass course-card" style="border-top-color: #f59e0b;">
+                    <i class="fa-solid fa-rocket course-icon" style="color: #f59e0b;"></i>
+                    <h3>Internship Accelerator</h3>
                     <div class="course-price">₹999</div>
-                    <p>Dedicated preparation for landing top-tier internships, complete with resume reviews and intense mock interviews.</p>
-                    <button class="action-btn" onclick="buyCourse('Mentorship for Internship')">Buy Now <i class="fa-solid fa-cart-shopping"></i></button>
+                    <p>Intensive prep for landing top-tier internships. Includes ATS resume building, mock interviews, and referral networks.</p>
+                    <button class="action-btn" style="background: #f59e0b;" onclick="buyCourse('Internship Accelerator')">Join Cohort <i class="fa-solid fa-star"></i></button>
                 </div>
 
             </div>
         </div>
 
+        <!-- ================= STUDENT PROFILE VIEW (NEW) ================= -->
+        <div id="profileView" class="view-section">
+            <div class="glass profile-container">
+                <div class="profile-avatar">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+                <h2 class="profile-name" id="p_name">Student Name</h2>
+                <p class="profile-email" id="p_email">student@domain.com</p>
+
+                <div class="profile-details-grid">
+                    <div class="detail-item">
+                        <p>Roll Number</p>
+                        <h4 id="p_roll">N/A</h4>
+                    </div>
+                    <div class="detail-item">
+                        <p>Branch</p>
+                        <h4 id="p_branch">N/A</h4>
+                    </div>
+                    <div class="detail-item">
+                        <p>Semester</p>
+                        <h4 id="p_sem">N/A</h4>
+                    </div>
+                    <div class="detail-item">
+                        <p>Interest Area</p>
+                        <h4 id="p_course">N/A</h4>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="action-btn btn-outline" onclick="switchView('dashboardView')">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                    <button class="action-btn btn-danger" onclick="logout()">
+                        <i class="fa-solid fa-power-off"></i> Secure Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Bottom spacer for balance -->
     <div class="spacer bottom"></div>
 
-    <!-- Added Footer -->
-    <div class="global-footer">
-        made by 😍
-    </div>
-
     <script>
+        // --- ⚠️ IMPORTANT: REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL ---
+        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+        // -------------------------------------------------------------------------------
+
         // --- THEME LOGIC ---
         const themeBtn = document.getElementById('themeBtn');
         const body = document.body;
         const themeIcon = themeBtn.querySelector('i');
-
         const currentTheme = localStorage.getItem('theme') || 'dark';
+        
         body.setAttribute('data-theme', currentTheme);
         updateThemeIcon(currentTheme);
 
@@ -612,43 +546,22 @@
 
         function updateThemeIcon(theme) {
             if (theme === 'light') {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
+                themeIcon.className = 'fa-solid fa-sun';
             } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
+                themeIcon.className = 'fa-solid fa-moon';
             }
         }
 
-        // --- PROFILE DROPDOWN LOGIC ---
-        const profileToggleBtn = document.getElementById('profileToggleBtn');
-        const profileDropdown = document.getElementById('profileDropdown');
-
-        profileToggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent document click from immediately closing it
-            profileDropdown.classList.toggle('show');
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!profileDropdown.contains(e.target) && !profileToggleBtn.contains(e.target)) {
-                profileDropdown.classList.remove('show');
-            }
-        });
-
         // --- NAVIGATION LOGIC ---
         function switchView(viewId) {
-            // Hide all views
-            document.querySelectorAll('.view-section').forEach(el => {
-                el.classList.remove('active');
-            });
-            // Show target view
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
             
-            // Clear any alerts
-            document.getElementById('loginAlert').classList.remove('show');
+            // Clear alerts
+            const loginAlert = document.getElementById('loginAlert');
+            if(loginAlert) loginAlert.classList.remove('show');
 
-            // Expand container wrapper if going to the dashboard
+            // Handle Container Width for Dashboard
             const container = document.getElementById('mainContainer');
             if(viewId === 'dashboardView') {
                 container.classList.add('dashboard-active');
@@ -656,144 +569,162 @@
                 container.classList.remove('dashboard-active');
             }
 
-            // Scroll to top naturally
+            // Handle Profile Icon visibility
+            const profileIcon = document.getElementById('profileToggleBtn');
+            const isLoggedIn = localStorage.getItem('courseAppUser') !== null;
+            
+            // Show icon ONLY if logged in AND not currently on the profile page
+            if(isLoggedIn && viewId !== 'profileView') {
+                profileIcon.style.display = 'flex';
+            } else {
+                profileIcon.style.display = 'none';
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Profile Button Click
+        document.getElementById('profileToggleBtn').addEventListener('click', () => {
+            populateProfileData();
+            switchView('profileView');
+        });
+
+        function populateProfileData() {
+            const userStr = localStorage.getItem('courseAppUser');
+            if(userStr) {
+                const user = JSON.parse(userStr);
+                document.getElementById('p_name').innerText = user.name || "N/A";
+                document.getElementById('p_email').innerText = user.email || "N/A";
+                document.getElementById('p_roll').innerText = user.roll || "N/A";
+                document.getElementById('p_branch').innerText = user.branch || "N/A";
+                document.getElementById('p_sem').innerText = user.semester || "N/A";
+                document.getElementById('p_course').innerText = user.course || "N/A";
+            }
+        }
+
         function showLoggedInState(user) {
-            // Update profile dropdown info
-            document.getElementById('profileNameDisplay').innerText = user.name || user.email.split('@')[0];
-            document.getElementById('profileRollDisplay').innerText = user.roll || 'N/A';
-            document.getElementById('profileCourseDisplay').innerText = user.course || 'N/A';
-            document.getElementById('welcomeMessage').innerText = `Welcome back ${user.name || user.email.split('@')[0]}! Ready to level up?`;
-            
-            // Show the profile button icon
-            document.getElementById('profileToggleBtn').style.display = 'flex';
-            
+            document.getElementById('welcomeMessage').innerText = `Welcome back, ${user.name.split(' ')[0]}! Ready to elevate your career?`;
             switchView('dashboardView');
         }
 
         function logout() {
             localStorage.removeItem('courseAppUser');
             document.getElementById('loginEmail').value = '';
-            document.getElementById('profileToggleBtn').style.display = 'none'; // Hide profile icon
-            profileDropdown.classList.remove('show'); // Close dropdown
             switchView('loginView');
         }
 
         function buyCourse(courseName) {
             const toast = document.getElementById('toast');
-            document.getElementById('toastMsg').innerText = `Initiating secure payment for ${courseName}...`;
+            document.getElementById('toastMsg').innerText = `Preparing enrollment for ${courseName}...`;
             toast.classList.add('show');
-            
-            // Hide toast after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // Check login state on page load
+        // Initialize App State
         window.addEventListener('DOMContentLoaded', () => {
             const userStr = localStorage.getItem('courseAppUser');
             if (userStr) {
-                const user = JSON.parse(userStr);
-                showLoggedInState(user);
+                showLoggedInState(JSON.parse(userStr));
             }
         });
 
-        // --- GOOGLE APPS SCRIPT URL ---
-        const scriptURL = 'https://script.google.com/macros/s/AKfycby9iO8xQQHhJSnRkcfaVDMwgJaa6TPeu6OjN1MlDSlN5vwUGS0Tnfdu1_XOUd--8MM/exec';
-
-        // --- LOGIN LOGIC ---
-        const loginForm = document.getElementById('loginForm');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginAlert = document.getElementById('loginAlert');
-
-        loginForm.addEventListener('submit', async (e) => {
+        // --- LOGIN API LOGIC ---
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
-            const originalBtnContent = loginBtn.innerHTML;
+            const btn = document.getElementById('loginBtn');
+            const alertBox = document.getElementById('loginAlert');
+            const originalText = btn.innerHTML;
             
-            loginBtn.innerHTML = 'Verifying... <i class="fa-solid fa-spinner fa-spin"></i>';
-            loginBtn.disabled = true;
-            loginAlert.classList.remove('show');
+            if(scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                alertBox.innerText = "Please update the scriptURL in the HTML code with your Google Apps Script Web App URL first.";
+                alertBox.classList.add('show');
+                return;
+            }
+
+            btn.innerHTML = 'Verifying Data... <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+            alertBox.classList.remove('show');
 
             try {
-                // To perform a check, we append ?action=login&email=... to the URL
+                // GET request to Apps Script
                 const response = await fetch(`${scriptURL}?action=login&email=${encodeURIComponent(email)}`);
                 const data = await response.json();
 
                 if (data.status === 'success' && data.exists === true) {
-                    // Email found! Save to localStorage and switch to dashboard
                     const userObj = {
-                        email: email,
-                        name: data.name,     // Expecting name from backend
-                        roll: data.roll,     // Expecting roll from backend
-                        course: data.course  // Expecting course from backend
+                        email: data.email,
+                        name: data.name,     
+                        roll: data.roll,     
+                        course: data.course,
+                        branch: data.branch,
+                        semester: data.semester
                     };
                     localStorage.setItem('courseAppUser', JSON.stringify(userObj));
                     showLoggedInState(userObj);
                 } else {
-                    // Email not found
-                    loginAlert.innerText = "Data not found in database. Please sign up first.";
-                    loginAlert.classList.add('show');
+                    alertBox.innerText = "Email not found. Please apply for mentorship first.";
+                    alertBox.classList.add('show');
                 }
             } catch (error) {
                 console.error("Login Error:", error);
-                // Important Fallback Message if Google Apps Script is not updated yet
-                loginAlert.innerHTML = "<b>Backend Error:</b> Ensure your Google Apps Script is updated to handle GET requests for logins.";
-                loginAlert.classList.add('show');
+                alertBox.innerHTML = "<b>Connection Error:</b> Ensure your Apps Script URL is correct and deployed as 'Anyone'.";
+                alertBox.classList.add('show');
             } finally {
-                loginBtn.innerHTML = originalBtnContent;
-                loginBtn.disabled = false;
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         });
 
-        // --- SIGNUP LOGIC ---
-        const signupForm = document.getElementById('enrollmentForm');
-        const submitBtn = document.getElementById('submitBtn');
-
-        signupForm.addEventListener('submit', e => {
+        // --- SIGNUP API LOGIC ---
+        document.getElementById('enrollmentForm').addEventListener('submit', e => {
             e.preventDefault();
+            const form = e.target;
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
             
-            const originalBtnContent = submitBtn.innerHTML;
-            submitBtn.innerHTML = 'Enrolling... <i class="fa-solid fa-spinner fa-spin"></i>';
-            submitBtn.disabled = true;
+            if(scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                alert("Please update the scriptURL in the code with your Google Apps Script URL.");
+                return;
+            }
+
+            btn.innerHTML = 'Submitting... <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
             
-            // Convert FormData to URLSearchParams for better Google Apps Script compatibility
+            // Submitting to Google Forms via fetch mode: no-cors
             fetch(scriptURL, { 
                 method: 'POST', 
-                body: new URLSearchParams(new FormData(signupForm)), 
+                body: new URLSearchParams(new FormData(form)), 
                 mode: 'no-cors' 
             })
-            .then(response => {
-                submitBtn.innerHTML = 'Registered! <i class="fa-solid fa-check-circle"></i>';
-                submitBtn.style.background = 'var(--success-color)';
-                submitBtn.style.color = '#111827';
+            .then(() => {
+                btn.innerHTML = 'Application Sent! <i class="fa-solid fa-check-circle"></i>';
+                btn.style.background = 'var(--success-color)';
+                btn.style.color = '#fff';
                 
                 setTimeout(() => {
-                    submitBtn.innerHTML = originalBtnContent;
-                    submitBtn.style.background = '';
-                    submitBtn.style.color = '';
-                    submitBtn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                    btn.disabled = false;
                     
-                    signupForm.reset();
-                    // Auto-switch to login page after successful registration
-                    switchView('loginView');
+                    form.reset();
+                    switchView('loginView'); // Auto redirect to login
                     
-                }, 3000);
+                    const toast = document.getElementById('toast');
+                    document.getElementById('toastMsg').innerText = "Registration successful! Please login.";
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 3500);
+                }, 2000);
             })
             .catch(error => {
-                submitBtn.innerHTML = 'Error! <i class="fa-solid fa-triangle-exclamation"></i>';
-                submitBtn.style.background = 'var(--error-color)'; 
-                submitBtn.style.color = '#fff';
-                console.error('Submission Error:', error);
-                
+                btn.innerHTML = 'Submission Failed <i class="fa-solid fa-triangle-exclamation"></i>';
+                btn.style.background = 'var(--error-color)';
+                console.error('Error:', error);
                 setTimeout(() => {
-                    submitBtn.innerHTML = originalBtnContent;
-                    submitBtn.style.background = '';
-                    submitBtn.style.color = '';
-                    submitBtn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                    btn.disabled = false;
                 }, 3000);
             });
         });
