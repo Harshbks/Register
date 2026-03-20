@@ -460,12 +460,80 @@
 
         .global-footer { padding: 1.5rem 0; text-align: center; font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; }
 
+        /* --- NEW PRICING PAGE CSS --- */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        .pricing-card {
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-radius: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px var(--shadow-color);
+        }
+        .pricing-card.popular {
+            border-color: var(--launch-indigo);
+            background: linear-gradient(180deg, rgba(79, 70, 229, 0.08) 0%, rgba(255,255,255,0.02) 100%);
+        }
+        .pricing-card .popular-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--launch-indigo);
+            color: white;
+            padding: 0.4rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-bottom-left-radius: 15px;
+            letter-spacing: 1px;
+        }
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0 1.5rem 0;
+            color: var(--text-primary);
+        }
+        .pricing-price span {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+            flex-grow: 1;
+        }
+        .pricing-features li {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+        .pricing-features li i {
+            color: var(--success-color);
+        }
+
         @media (max-width: 768px) {
             .hero-section { flex-direction: column; padding: 2rem; text-align: center; }
             .hero-text h1 { font-size: 2.2rem; }
             .hero-visual { display: none; }
             .testimonial-card { flex-direction: column; text-align: center; padding: 1.5rem; gap: 1rem; }
-            .launchpad-grid { grid-template-columns: 1fr; }
+            .launchpad-grid, .pricing-grid { grid-template-columns: 1fr; }
             
             .carousel-container { 
                 max-width: calc(100% - 45px); 
@@ -730,6 +798,57 @@
 
         </div>
 
+        <div id="guidanceView" class="view-section">
+            <div class="header">
+                <h1>Internship Guidance</h1>
+                <p>Choose the right mentorship plan to accelerate your career.</p>
+            </div>
+
+            <button onclick="switchView('dashboardView')" class="action-btn" style="max-width: 180px; margin: 0 auto 2rem auto; background: transparent; border: 1px solid var(--input-border); color: var(--text-primary);">
+                <i class="fa-solid fa-arrow-left"></i> Back Home
+            </button>
+
+            <div class="pricing-grid">
+                
+                <div class="glass pricing-card">
+                    <h3>Basic Plan</h3>
+                    <div class="pricing-price">₹199<span>/once</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fa-solid fa-check"></i> Guidance by Senior</li>
+                        <li><i class="fa-solid fa-check"></i> Basic Resume Review</li>
+                        <li><i class="fa-solid fa-check"></i> Email Support</li>
+                    </ul>
+                    <button class="launch-btn btn-blue" onclick="purchasePlan('199')">Select Plan</button>
+                </div>
+
+                <div class="glass pricing-card popular">
+                    <div class="popular-badge"><i class="fa-solid fa-star"></i> Most Popular</div>
+                    <h3>Pro Mentorship</h3>
+                    <div class="pricing-price">₹499<span>/once</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fa-solid fa-check"></i> Guidance by Senior & Teacher</li>
+                        <li><i class="fa-solid fa-check"></i> Detailed Resume Optimization</li>
+                        <li><i class="fa-solid fa-check"></i> 1-on-1 Mock Interviews</li>
+                        <li><i class="fa-solid fa-check"></i> Project Assistance</li>
+                    </ul>
+                    <button class="launch-btn btn-indigo" onclick="purchasePlan('499')">Select Plan</button>
+                </div>
+
+                <div class="glass pricing-card popular">
+                    <div class="popular-badge"><i class="fa-solid fa-star"></i> Highly Recommended</div>
+                    <h3>Ultimate Guarantee</h3>
+                    <div class="pricing-price">₹999<span>/once</span></div>
+                    <ul class="pricing-features">
+                        <li><i class="fa-solid fa-check"></i> Guidance till you get an Internship</li>
+                        <li><i class="fa-solid fa-check"></i> Unlimited Mock Interviews</li>
+                        <li><i class="fa-solid fa-check"></i> Direct Referral Assistance</li>
+                        <li><i class="fa-solid fa-check"></i> 24/7 Priority WhatsApp Support</li>
+                    </ul>
+                    <button class="launch-btn btn-indigo" onclick="purchasePlan('999')">Select Plan</button>
+                </div>
+            </div>
+        </div>
+
         <div id="profileView" class="view-section">
             <div class="header">
                 <h1>Student Profile</h1>
@@ -769,12 +888,10 @@
         // ==========================================
         const ownerLinks = {
             quiz: "https://forms.gle/75J5UmPSKsMwafva8",
-            roadmap: "https://drive.google.com/your-pdf-link",
-            guidance: "https://yourwebsite.com/guidance",
+            roadmap: "https://drive.google.com/drive/folders/1BG56R_O_x9tuPxndlEKZVIY1_bTcKOhf?usp=sharing",
             community: "https://chat.whatsapp.com/your-link"
         };
 
-        // MAKE SURE TO PASTE YOUR NEW WEB APP URL HERE
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwvRdymrLl6J0QWZrntgFjmPbqOBDW6aVDkrtYRQG_qXprAO5IdpV1Z4XGck3HYQwdI/exec';
 
         // --- THEME LOGIC ---
@@ -817,7 +934,9 @@
             document.getElementById(viewId).classList.add('active');
             
             const container = document.getElementById('mainContainer');
-            if(viewId === 'dashboardView') {
+            
+            // Allow dashboard and the new guidance page to use the wider 1100px layout
+            if(viewId === 'dashboardView' || viewId === 'guidanceView') {
                 container.classList.add('dashboard-active');
             } else {
                 container.classList.remove('dashboard-active');
@@ -850,13 +969,18 @@
 
         // CHECK LOGIN STATE ON LOAD
         window.addEventListener('DOMContentLoaded', () => {
-            const userStr = localStorage.getItem('courseAppUser');
-            if (userStr) {
-                showLoggedInState(JSON.parse(userStr));
-            } else {
-                // Force user back to login page if they reload
-                document.getElementById('loginToggleBtn').style.display = 'flex';
-                document.getElementById('profileToggleBtn').style.display = 'none';
+            try {
+                const userStr = localStorage.getItem('courseAppUser');
+                if (userStr) {
+                    showLoggedInState(JSON.parse(userStr));
+                } else {
+                    document.getElementById('loginToggleBtn').style.display = 'flex';
+                    document.getElementById('profileToggleBtn').style.display = 'none';
+                    switchView('loginView');
+                }
+            } catch(e) {
+                // Failsafe in case local storage data gets corrupted
+                localStorage.removeItem('courseAppUser');
                 switchView('loginView');
             }
         });
@@ -877,6 +1001,12 @@
                 return;
             }
 
+            // Route to the new Pricing Page if "guidance" is clicked
+            if (resourceType === 'guidance') {
+                switchView('guidanceView');
+                return;
+            }
+
             const targetUrl = ownerLinks[resourceType];
             if (targetUrl) {
                 window.open(targetUrl, '_blank');
@@ -885,6 +1015,19 @@
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 2000);
             }
+        }
+
+        // --- PURCHASE PLAN LOGIC ---
+        function purchasePlan(price) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            
+            toastMsg.innerHTML = `Redirecting to payment gateway for ₹${price}...`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         // --- INFINITE TESTIMONIAL CAROUSEL LOGIC ---
@@ -897,7 +1040,9 @@
         let autoPlayInterval;
 
         function moveNext() {
-            if (isTransitioning) return;
+            // FIX: If the element is hidden (e.g. user is on login page), cancel transition trigger. 
+            // Otherwise, `transitionend` will never fire and freeze the carousel permanently.
+            if (isTransitioning || track.offsetParent === null) return;
             isTransitioning = true;
             isNextAction = true;
             
@@ -906,7 +1051,7 @@
         }
 
         function movePrev() {
-            if (isTransitioning) return;
+            if (isTransitioning || track.offsetParent === null) return;
             isTransitioning = true;
             isNextAction = false;
             
@@ -950,7 +1095,6 @@
 
         startAutoPlay();
 
-
         // --- LOGIN FORM LOGIC ---
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
@@ -983,7 +1127,7 @@
                     loginAlert.classList.add('show');
                 }
             } catch (error) {
-                loginAlert.innerHTML = "<b>Backend Error:</b> Ensure your Google Apps Script is updated.";
+                loginAlert.innerHTML = "<b>Backend Error:</b> Ensure your Google Apps Script is updated and CORS is enabled.";
                 loginAlert.classList.add('show');
             } finally {
                 loginBtn.innerHTML = originalBtnContent;
